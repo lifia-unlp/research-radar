@@ -19,15 +19,16 @@ BaselineOfRIPAISC >> baseline: spec [
 				package: 'RIPAISC'
 				with: [ spec
 						requires:
-							#('Seaside3' 'Bootstrap5-Core'  'Seaside-Plotly-Core' ) ] ].
+							#('Seaside3' 'Bootstrap5'  'Seaside-Plotly-Core' ) ] ].
 
 ]
 
 { #category : #baselines }
 BaselineOfRIPAISC >> bootstrap5: spec [
 	spec
-		package: 'Bootstrap5-Core'
-		with: [ spec repository: 'github://astares/Seaside-Bootstrap4:master/src' ].
+		baseline: 'Bootstrap5'
+		with: [ spec repository: 'github://astares/Seaside-Bootstrap5:master/src' ].
+
 
 ]
 
