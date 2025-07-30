@@ -7,8 +7,7 @@ Class {
 		'projects',
 		'educationalOffers',
 		'countries',
-		'topics',
-		'applicationDomains'
+		'taxonomy'
 	],
 	#classInstVars : [
 		'singleton',
@@ -45,13 +44,13 @@ Radar class >> singleton [
 { #category : #accessing }
 Radar >> applicationDomains [
 
-	^ applicationDomains
+	^self applicationTaxonomy subtopics
 ]
 
 { #category : #accessing }
-Radar >> applicationDomains: anObject [
+Radar >> applicationTaxonomy [
 
-	applicationDomains := anObject
+	^ taxonomy subtopics second
 ]
 
 { #category : #accessing }
@@ -97,8 +96,13 @@ Radar >> initialize [
 	groups := OrderedCollection new.
 	projects := OrderedCollection new.
 	educationalOffers := OrderedCollection new.
-	topics := (Topic fromJSON: Topic qseTaxonomyAsJson) subtopics.
-   applicationDomains := (Topic fromJSON: Topic domainsTaxonomyAsJson) subtopics.
+	taxonomy := Topic
+		            labeled: 'Quantum computing';
+		            description: 'Root element of the taxonomy';
+		            yourself.
+	taxonomy subtopics
+		add: (Topic fromJSON: Topic qseTaxonomyAsJson);
+		add: (Topic fromJSON: Topic domainsTaxonomyAsJson).
 	countries := { 'Argentina'. 'Bolivia'. 'Brasil'. 'Chile'. 'Colombia'.
 	             'Costa Rica'. 'Cuba'. 'Ecuador'. 'El Salvador'.
 	             'España'. 'Guatemala'. 'Guinea Ecuatorial'.
@@ -134,11 +138,11 @@ Radar >> publications: anObject [
 { #category : #accessing }
 Radar >> topics [
 
-	^ topics
+	^ self topicsTaxonomy subtopics
 ]
 
 { #category : #accessing }
-Radar >> topics: anObject [
+Radar >> topicsTaxonomy [
 
-	topics := anObject
+	^ taxonomy subtopics first
 ]

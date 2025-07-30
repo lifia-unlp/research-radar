@@ -223,7 +223,7 @@ PublicationEditorComponent >> renderContentOn: html [
 				html label: 'Resumen'.
 				html textArea formControl
 					on: #abstract of: self;
-					rows: 5 ].
+					rows: 15 ].
 
 			html formGroup: [
 				html label: 'URL'.

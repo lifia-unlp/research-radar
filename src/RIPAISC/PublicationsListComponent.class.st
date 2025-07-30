@@ -47,7 +47,20 @@ PublicationsListComponent >> renderContentOn: html [
 { #category : #rendering }
 PublicationsListComponent >> renderPublication: each on: html [
 
-	html text: each title.
+	html strong: each title , '. '.
+	html space.
+	html emphasis: each author , '. '.
+	html text: '(' , each year , ')'.
+	html break.
+	html text:
+		'Countries (from iberoamerica): ' , each countries asCommaStringAnd.
+	html break.
+	html text: 'Topics: ' , (each topics collect: [ :dom | dom value label ]) asCommaStringAnd.
+	html break.
+	html text: 'Application domains: '
+		, (each applicationDomains collect: [ :dom | dom value label ])
+				asCommaStringAnd.
+	html break.
 	html space.
 	html anchor
 		callback: [ self delete: each ];
