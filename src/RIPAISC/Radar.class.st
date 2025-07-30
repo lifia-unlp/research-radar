@@ -7,7 +7,7 @@ Class {
 	#classInstVars : [
 		'singleton'
 	],
-	#category : #'RIPAISC-model'
+	#category : #'RIPAISC-persistence'
 }
 
 { #category : #accessing }
