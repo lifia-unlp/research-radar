@@ -11,7 +11,8 @@ Class {
 		'applicationDomains'
 	],
 	#classInstVars : [
-		'singleton'
+		'singleton',
+		'monitor'
 	],
 	#category : #'RIPAISC-persistence'
 }
@@ -23,9 +24,22 @@ Radar class >> resetSingleton [
 ]
 
 { #category : #accessing }
+Radar class >> save: aRadar on: aFilename [
+
+	monitor critical: [
+		aFilename asFileReference writeStreamDo: [ :stream |
+			(STONWriter on: stream)
+				prettyPrint: true;
+				newLine: OSPlatform current lineEnding;
+				nextPut: aRadar ] ]
+]
+
+{ #category : #accessing }
 Radar class >> singleton [
 
-	^ singleton ifNil: [ singleton := self new ]
+	^ singleton ifNil: [
+		  monitor := Monitor new.
+		  singleton := self new. ]
 ]
 
 { #category : #accessing }

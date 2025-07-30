@@ -27,9 +27,27 @@ RipaiscAbstractComponent >> caller: anObject [
 	caller := anObject
 ]
 
+{ #category : #'save-restore' }
+RipaiscAbstractComponent >> radar [
+
+ ^ Radar singleton. 
+]
+
 { #category : #updating }
 RipaiscAbstractComponent >> rendererClass [
 	^ SBSHtmlCanvas
+]
+
+{ #category : #'save-restore' }
+RipaiscAbstractComponent >> repositoryFilename [
+
+	^ 'ripaisc-radar.ston'
+]
+
+{ #category : #'save-restore' }
+RipaiscAbstractComponent >> save [
+
+	Radar save: self radar on: self repositoryFilename
 ]
 
 { #category : #updating }

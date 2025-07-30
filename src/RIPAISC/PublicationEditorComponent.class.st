@@ -2,6 +2,7 @@ Class {
 	#name : #PublicationEditorComponent,
 	#superclass : #RipaiscAbstractComponent,
 	#instVars : [
+		'publication',
 		'title',
 		'selfArchivingUrl',
 		'url',
@@ -12,7 +13,8 @@ Class {
 		'countries',
 		'topics',
 		'applicationAreas',
-		'producedByRipaisc'
+		'producedByRipaisc',
+		'bibtexEntry'
 	],
 	#category : #'RIPAISC-seaside'
 }
@@ -31,7 +33,22 @@ PublicationEditorComponent >> abstract: anObject [
 
 { #category : #callbacks }
 PublicationEditorComponent >> accept [
-  self halt. 
+
+	publication ifNil: [ publication := Publication new ].
+	bibtexEntry ifNotNil: [ publication bibtexEntry: bibtexEntry ].
+	publication
+		title: title;
+		selfArchivingUrl: selfArchivingUrl;
+		url: url;
+		abstract: abstract;
+		author: authors;
+		year: year;
+		doi: doi;
+		countries: countries;
+		topics: topics;
+		applicationDomains: applicationAreas;
+		byRipaisc: producedByRipaisc.
+	self answer: publication
 ]
 
 { #category : #accessing }
@@ -58,12 +75,12 @@ PublicationEditorComponent >> authors: anObject [
 	authors := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #rendering }
 PublicationEditorComponent >> availableApplicationDomains [
 
 	| col |
 	col := OrderedCollection new.
-	Radar singleton applicationDomains  do: [ :each |
+	 self radar applicationDomains  do: [ :each |
 		each withSubtopicsOn: col atLevel: 0 ].
 	^ col
 ]
@@ -71,15 +88,15 @@ PublicationEditorComponent >> availableApplicationDomains [
 { #category : #rendering }
 PublicationEditorComponent >> availableCountries [
 
-	^ Radar singleton countries
+	^ self radar countries
 ]
 
-{ #category : #accessing }
+{ #category : #rendering }
 PublicationEditorComponent >> availableTopics [
 
 	| col |
 	col := OrderedCollection new.
-	Radar singleton topics do: [ :each |
+	self radar topics do: [ :each |
 		each withSubtopicsOn: col atLevel: 0 ].
 	^ col
 ]
@@ -108,6 +125,26 @@ PublicationEditorComponent >> doi: anObject [
 	doi := anObject
 ]
 
+{ #category : #callbacks }
+PublicationEditorComponent >> fetchBibtex [
+
+	doi ifNil: [ ^ self ].
+	bibtexEntry := DoiOrgAPI new get: 'https://doi.org/' , doi.
+	bibtexEntry ifNil: [
+		title := 'Fetching failed'.
+		year := 'Fetching failed'.
+		authors := 'Fetching failed'.
+		abstract := 'Fetching failed'.
+		url := 'Fetching failed'.
+		^ self ].
+	bibtexEntry := bibtexEntry cleanupLatexAccentsAndBraces.
+	title := bibtexEntry title.
+	year := bibtexEntry year.
+	authors := bibtexEntry author.
+	abstract := bibtexEntry abstract.
+	url := bibtexEntry url
+]
+
 { #category : #accessing }
 PublicationEditorComponent >> producedByRipaisc [
 
@@ -120,11 +157,47 @@ PublicationEditorComponent >> producedByRipaisc: anObject [
 	producedByRipaisc := anObject
 ]
 
+{ #category : #accessing }
+PublicationEditorComponent >> publication [
+
+	^ publication
+]
+
+{ #category : #initialize }
+PublicationEditorComponent >> publication: anObject [
+
+	publication := anObject.
+	title := publication title.
+	abstract := publication abstract.
+	year := publication year.
+	doi := publication doi.
+	url := publication url.
+	authors := publication author.
+	producedByRipaisc := publication byRipaisc.
+	selfArchivingUrl := publication selfArchivingUrl.
+	countries := publication countries.
+	topics := publication topics.
+	applicationAreas := publication applicationDomains.
+	bibtexEntry := publication bibtexEntry
+]
+
 { #category : #rendering }
 PublicationEditorComponent >> renderContentOn: html [
 
 	html container: [
 		html form: [
+			html formGroup: [
+				html label: 'DOI'.
+				publication ifNil: [
+					html space.
+					html outlineButton
+						callback: [ self fetchBibtex ];
+						bePrimary;
+						beSmall;
+						with: 'Pre-cargar' ] ].
+			html textInput formControl on: #doi of: self.
+
+
 			html formGroup: [
 				html label: 'Título'.
 				html textInput formControl on: #title of: self ].
@@ -151,9 +224,6 @@ PublicationEditorComponent >> renderContentOn: html [
 				html textArea formControl
 					on: #abstract of: self;
 					rows: 5 ].
-			html formGroup: [
-				html label: 'DOI'.
-				html textInput formControl on: #doi of: self ].
 
 			html formGroup: [
 				html label: 'URL'.
@@ -195,7 +265,7 @@ PublicationEditorComponent >> renderContentOn: html [
 					with: 'Aceptar'.
 				html space.
 				html formButton
-					callback: [ self answer ];
+					callback: [ self answer: nil ];
 					beSecondary;
 					with: 'Cancelar'.
 				html space ] ] ]

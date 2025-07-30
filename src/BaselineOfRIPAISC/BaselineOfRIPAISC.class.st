@@ -14,6 +14,7 @@ BaselineOfRIPAISC >> baseline: spec [
 				doi: spec;
 				seaside: spec;
 				bootstrap5: spec;
+				neoCSV: spec;
 				plotly: spec.
 			spec
 				package: 'RIPAISC'
@@ -37,6 +38,13 @@ BaselineOfRIPAISC >> doi: spec [
 	spec
 		package: 'DOI'
 		with: [ spec repository: 'github://cientopolis/petitbibtex' ]
+]
+
+{ #category : #baselines }
+BaselineOfRIPAISC >> neoCSV: spec [
+	spec
+		baseline: 'NeoCSV'
+		with: [ spec repository: 'github://svenvc/NeoCSV/repository' ]
 ]
 
 { #category : #baselines }

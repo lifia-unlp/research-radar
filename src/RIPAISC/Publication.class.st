@@ -5,11 +5,49 @@ Class {
 		'bibtexEntry',
 		'selfArchivingUrl',
 		'byRipaisc',
-		'coutries',
-		'nodes'
+		'ripaiscNodes',
+		'topics',
+		'applicationDomains',
+		'countries'
 	],
 	#category : #'RIPAISC-model'
 }
+
+{ #category : #accessing }
+Publication >> abstract [
+
+	^ bibtexEntry abstract
+]
+
+{ #category : #accessing }
+Publication >> abstract: anObject [
+
+	bibtexEntry abstract: anObject
+]
+
+{ #category : #accessing }
+Publication >> applicationDomains [
+
+	^ applicationDomains
+]
+
+{ #category : #accessing }
+Publication >> applicationDomains: anObject [
+
+	applicationDomains := anObject
+]
+
+{ #category : #accessing }
+Publication >> author [
+
+	^ bibtexEntry author
+]
+
+{ #category : #accessing }
+Publication >> author: aString [
+
+	bibtexEntry author: aString
+]
 
 { #category : #accessing }
 Publication >> bibtexEntry [
@@ -36,35 +74,38 @@ Publication >> byRipaisc: anObject [
 ]
 
 { #category : #accessing }
-Publication >> coutries [
+Publication >> countries [
 
-	^ coutries
+	^ countries
 ]
 
 { #category : #accessing }
-Publication >> coutries: anObject [
+Publication >> countries: anObject [
 
-	coutries := anObject
+	countries := anObject
+]
+
+{ #category : #accessing }
+Publication >> doi [
+
+	^ bibtexEntry doi
+]
+
+{ #category : #accessing }
+Publication >> doi: anObject [
+
+	bibtexEntry doi: anObject
 ]
 
 { #category : #initialization }
 Publication >> initialize [
-
+	
 	byRipaisc := false.
-	coutries := OrderedCollection new.
-	nodes := OrderedCollection new
-]
-
-{ #category : #accessing }
-Publication >> nodes [
-
-	^ nodes
-]
-
-{ #category : #accessing }
-Publication >> nodes: anObject [
-
-	nodes := anObject
+	countries := OrderedCollection new.
+	ripaiscNodes  := OrderedCollection new.
+	applicationDomains := OrderedCollection new.
+	topics := OrderedCollection new. 
+	bibtexEntry := BibtexEntry new. 
 ]
 
 { #category : #accessing }
@@ -77,4 +118,52 @@ Publication >> selfArchivingUrl [
 Publication >> selfArchivingUrl: anObject [
 
 	selfArchivingUrl := anObject
+]
+
+{ #category : #accessing }
+Publication >> title [
+
+	^ bibtexEntry title
+]
+
+{ #category : #accessing }
+Publication >> title: anObject [
+
+	bibtexEntry title: anObject
+]
+
+{ #category : #accessing }
+Publication >> topics [
+
+	^ topics
+]
+
+{ #category : #accessing }
+Publication >> topics: anObject [
+
+	topics := anObject
+]
+
+{ #category : #accessing }
+Publication >> url [
+
+	^bibtexEntry url
+]
+
+{ #category : #accessing }
+Publication >> url: anObject [
+
+	bibtexEntry url: anObject
+]
+
+{ #category : #accessing }
+Publication >> year [
+
+	^ bibtexEntry year
+]
+
+{ #category : #accessing }
+Publication >> year: anObject [
+
+	bibtexEntry year: anObject
 ]
