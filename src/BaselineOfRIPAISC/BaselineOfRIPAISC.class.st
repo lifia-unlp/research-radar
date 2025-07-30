@@ -11,6 +11,7 @@ BaselineOfRIPAISC >> baseline: spec [
 		for: #common
 		do: [ self
 				petitBibtex: spec;
+				doi: spec;
 				seaside: spec;
 				bootstrap: spec;
 				plotly: spec.
@@ -18,7 +19,7 @@ BaselineOfRIPAISC >> baseline: spec [
 				package: 'RIPAISC'
 				with: [ spec
 						requires:
-							#('Seaside3' 'Bootstrap-Core' 'Bootstrap-Widgets' 'Seaside-Plotly-Core' 'PetitBibtex') ] ].
+							#('Seaside3' 'Bootstrap-Core' 'Bootstrap-Widgets' 'Seaside-Plotly-Core' ) ] ].
 
 ]
 
@@ -33,6 +34,13 @@ BaselineOfRIPAISC >> bootstrap: spec [
 	spec
 		package: 'Bootstrap-Jasny'
 		with: [ spec repository: 'github://astares/Seaside-Bootstrap/src' ]
+]
+
+{ #category : #baselines }
+BaselineOfRIPAISC >> doi: spec [
+	spec
+		package: 'DOI'
+		with: [ spec repository: 'github://cientopolis/petitbibtex' ]
 ]
 
 { #category : #baselines }
