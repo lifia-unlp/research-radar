@@ -7,7 +7,8 @@ Class {
 		'projects',
 		'educationalOffers',
 		'countries',
-		'topics'
+		'topics',
+		'applicationDomains'
 	],
 	#classInstVars : [
 		'singleton'
@@ -25,6 +26,18 @@ Radar class >> resetSingleton [
 Radar class >> singleton [
 
 	^ singleton ifNil: [ singleton := self new ]
+]
+
+{ #category : #accessing }
+Radar >> applicationDomains [
+
+	^ applicationDomains
+]
+
+{ #category : #accessing }
+Radar >> applicationDomains: anObject [
+
+	applicationDomains := anObject
 ]
 
 { #category : #accessing }
@@ -71,7 +84,7 @@ Radar >> initialize [
 	projects := OrderedCollection new.
 	educationalOffers := OrderedCollection new.
 	topics := (Topic fromJSON: Topic qseTaxonomyAsJson) subtopics.
-
+   applicationDomains := (Topic fromJSON: Topic domainsTaxonomyAsJson) subtopics.
 	countries := { 'Argentina'. 'Bolivia'. 'Brasil'. 'Chile'. 'Colombia'.
 	             'Costa Rica'. 'Cuba'. 'Ecuador'. 'El Salvador'.
 	             'España'. 'Guatemala'. 'Guinea Ecuatorial'.

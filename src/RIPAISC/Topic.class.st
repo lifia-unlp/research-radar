@@ -10,6 +10,166 @@ Class {
 }
 
 { #category : #constants }
+Topic class >> domainsTaxonomy [
+
+	^ self fromJSON: Topic domainsTaxonomyAsJson
+]
+
+{ #category : #constants }
+Topic class >> domainsTaxonomyAsJson [
+
+	^ '{
+  "label": "Application Areas of Quantum Software Engineering",
+  "short_description": "Problem domains where quantum software engineering methods, tools, or systems are applied or developed for real-world impact.",
+  "subtopics": [
+    {
+      "label": "Health and Life Sciences",
+      "short_description": "Applications that support diagnostics, drug discovery, genomics, and healthcare optimization using quantum-enhanced methods.",
+      "subtopics": [
+        {
+          "label": "Drug Discovery and Molecular Simulation",
+          "short_description": "Use of quantum algorithms for simulating molecular structures and reactions."
+        },
+        {
+          "label": "Genomic Data Analysis",
+          "short_description": "Quantum machine learning and optimization for processing large-scale biological data."
+        },
+        {
+          "label": "Healthcare Resource Optimization",
+          "short_description": "Scheduling, logistics, and planning applications in hospital or public health contexts."
+        }
+      ]
+    },
+    {
+      "label": "Finance and Economics",
+      "short_description": "Applications in financial modeling, risk analysis, optimization, and cryptography in economic contexts.",
+      "subtopics": [
+        {
+          "label": "Portfolio Optimization",
+          "short_description": "Use of quantum annealing or VQAs for selecting optimal investment strategies."
+        },
+        {
+          "label": "Fraud Detection and Risk Modeling",
+          "short_description": "Quantum-enhanced ML techniques for anomaly detection and prediction of financial risks."
+        },
+        {
+          "label": "Cryptocurrency and Blockchain",
+          "short_description": "Analysis of cryptographic primitives and blockchain systems in the quantum era."
+        }
+      ]
+    },
+    {
+      "label": "Cybersecurity",
+      "short_description": "Design and evaluation of secure systems in a post-quantum world or using quantum protocols.",
+      "subtopics": [
+        {
+          "label": "Quantum-Safe Cryptography",
+          "short_description": "Evaluation and implementation of cryptographic systems secure against quantum attacks."
+        },
+        {
+          "label": "Quantum Key Distribution",
+          "short_description": "Deployment of secure communication systems based on quantum mechanics."
+        },
+        {
+          "label": "Security in IoT and Smart Systems",
+          "short_description": "Application of quantum techniques to protect connected devices and embedded systems."
+        }
+      ]
+    },
+    {
+      "label": "Logistics and Transportation",
+      "short_description": "Use of quantum methods to address complex optimization problems in supply chains and transportation systems.",
+      "subtopics": [
+        {
+          "label": "Traveling Salesperson and Routing",
+          "short_description": "Mapping of routing problems to quantum annealing or hybrid solvers."
+        },
+        {
+          "label": "Supply Chain Optimization",
+          "short_description": "Quantum-inspired or quantum-native algorithms for minimizing cost and time in logistics."
+        }
+      ]
+    },
+    {
+      "label": "Smart Cities and Urban Systems",
+      "short_description": "Applications of QSE in optimizing energy, transport, security, and infrastructure in urban environments.",
+      "subtopics": [
+        {
+          "label": "Traffic Optimization",
+          "short_description": "Real-time route planning and congestion management using quantum optimization."
+        },
+        {
+          "label": "Resource Management",
+          "short_description": "Scheduling and distribution of water, electricity, or services in smart cities."
+        }
+      ]
+    },
+    {
+      "label": "Energy and Climate",
+      "short_description": "Quantum approaches to sustainable energy generation, distribution, and climate modeling.",
+      "subtopics": [
+        {
+          "label": "Energy Grid Optimization",
+          "short_description": "Quantum-enhanced methods for optimizing power grids and demand response."
+        },
+        {
+          "label": "Climate Modeling and Forecasting",
+          "short_description": "Quantum simulation for understanding complex atmospheric and ecological systems."
+        }
+      ]
+    },
+    {
+      "label": "Artificial Intelligence and Machine Learning",
+      "short_description": "Use of quantum computing to train or accelerate learning algorithms and AI systems.",
+      "subtopics": [
+        {
+          "label": "Quantum Machine Learning",
+          "short_description": "Use of variational circuits and hybrid models for classification, regression, or clustering."
+        },
+        {
+          "label": "Quantum Neural Networks",
+          "short_description": "Design of neural architectures operating on quantum principles (e.g., QBNNs, QPAMs)."
+        }
+      ]
+    },
+    {
+      "label": "Education and Training",
+      "short_description": "Development of quantum software systems, tools, or platforms for pedagogical use.",
+      "subtopics": [
+        {
+          "label": "Educational Simulators",
+          "short_description": "Quantum programming environments aimed at teaching concepts to students."
+        },
+        {
+          "label": "Curriculum Design Tools",
+          "short_description": "Software and frameworks to assist in building and evaluating educational materials for QSE."
+        }
+      ]
+    },
+    {
+      "label": "Fundamental Science and Research",
+      "short_description": "Use of quantum software to support research in chemistry, physics, biology, or mathematics.",
+      "subtopics": [
+        {
+          "label": "Quantum Chemistry",
+          "short_description": "Simulations of molecular systems for understanding fundamental chemical properties."
+        },
+        {
+          "label": "High-Energy and Particle Physics",
+          "short_description": "Use of quantum algorithms to model systems in theoretical or experimental physics."
+        },
+        {
+          "label": "Mathematical and Algorithmic Exploration",
+          "short_description": "Research on foundational quantum algorithms and theoretical computation models."
+        }
+      ]
+    }
+  ]
+}
+'
+]
+
+{ #category : #constants }
 Topic class >> fromDictionary: aDictionary [
 
 	^ self new
@@ -24,7 +184,7 @@ Topic class >> fromDictionary: aDictionary [
 Topic class >> fromJSON: aJSONString [
 
 	| dic |
-	dic := WAJsonParser parse: Topic qseTaxonomyAsJson.
+	dic := WAJsonParser parse: aJSONString.
 	^ self fromDictionary: dic
 ]
 
