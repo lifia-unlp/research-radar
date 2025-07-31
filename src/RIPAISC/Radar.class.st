@@ -44,11 +44,11 @@ Radar class >> singleton [
 { #category : #accessing }
 Radar >> applicationDomains [
 
-	^self applicationTaxonomy subtopics
+	^self applicationDomainsTaxonomy subtopics
 ]
 
 { #category : #accessing }
-Radar >> applicationTaxonomy [
+Radar >> applicationDomainsTaxonomy [
 
 	^ taxonomy subtopics second
 ]
@@ -96,8 +96,7 @@ Radar >> initialize [
 	groups := OrderedCollection new.
 	projects := OrderedCollection new.
 	educationalOffers := OrderedCollection new.
-	taxonomy := Topic
-		            labeled: 'Quantum computing';
+	taxonomy := (Topic labeled: 'Quantum computing')
 		            description: 'Root element of the taxonomy';
 		            yourself.
 	taxonomy subtopics

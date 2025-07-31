@@ -185,6 +185,7 @@ PublicationEditorComponent >> publication: anObject [
 PublicationEditorComponent >> renderContentOn: html [
 
 	html container: [
+		
 		html form: [
 			html formGroup: [
 				html label: 'DOI'.
