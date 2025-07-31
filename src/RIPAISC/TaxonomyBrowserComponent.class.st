@@ -3,28 +3,47 @@ Class {
 	#superclass : #RipaiscAbstractComponent,
 	#instVars : [
 		'taxonomy',
-		'selectedTopic',
 		'label',
 		'description',
-		'parent'
+		'selectedParentTopicWithLevel',
+		'selectedTopic'
 	],
 	#category : #'RIPAISC-seaside'
 }
 
 { #category : #callbacks }
+TaxonomyBrowserComponent >> accept [
+
+	selectedTopic label: label.
+	selectedTopic description: description.
+	self
+		changeParentOf: selectedTopic
+		to: selectedParentTopicWithLevel value
+]
+
+{ #category : #callbacks }
 TaxonomyBrowserComponent >> addNewTopic [
+
 	selectedTopic := Topic labeled: 'Undefined topic'.
 	label := selectedTopic label.
-	description := selectedTopic description. 
+	description := nil.
+	selectedParentTopicWithLevel := 0 -> taxonomy
 ]
 
 { #category : #callbacks }
 TaxonomyBrowserComponent >> cancel [
+
 	selectedTopic := nil.
 	label := nil.
 	description := nil.
-	parent := nil.
-	
+	selectedParentTopicWithLevel := nil
+]
+
+{ #category : #callbacks }
+TaxonomyBrowserComponent >> changeParentOf: aTopic to: parentTopic [
+
+	taxonomy removeSubtopic: aTopic.
+	parentTopic addSubtopic: aTopic 
 ]
 
 { #category : #accessing }
@@ -49,18 +68,6 @@ TaxonomyBrowserComponent >> label [
 TaxonomyBrowserComponent >> label: anObject [
 
 	label := anObject
-]
-
-{ #category : #accessing }
-TaxonomyBrowserComponent >> parent [
-
-	^ parent
-]
-
-{ #category : #accessing }
-TaxonomyBrowserComponent >> parent: anObject [
-
-	parent := anObject
 ]
 
 { #category : #rendering }
@@ -94,7 +101,7 @@ TaxonomyBrowserComponent >> renderTaxonomyTopic: aTopic on: html [
 				html anchor
 					callback: [ self toggleSelectFor: aTopic ];
 					with: [
-						aTopic == selectedTopic
+						aTopic == selectedTopic 
 							ifTrue: [ html strong: aTopic label ]
 							ifFalse: [ html text: aTopic label ] ] ].
 
@@ -117,8 +124,11 @@ TaxonomyBrowserComponent >> renderTopicEditorFormOn: html [
 				on: #description of: self;
 				rows: 3 ].
 		html formGroup: [
+			html label: 'Description'.
 			html formSelect
-				on: #parent of: self;
+				on: #selectedParentTopicWithLevel of: self;
+				labels: [ :each |
+					(String new: each key * 4 withAll: $.) , each value label ];
 				list: self topicsToChooseFrom ].
 		html formGroup: [
 			html formButton
@@ -135,6 +145,38 @@ TaxonomyBrowserComponent >> renderTopicEditorFormOn: html [
 			html space ] ]
 ]
 
+{ #category : #callbacks }
+TaxonomyBrowserComponent >> select: anObjectOrNil [
+
+	selectedTopic := anObjectOrNil.
+	selectedTopic
+		ifNil: [
+			selectedParentTopicWithLevel := nil.
+			label := nil.
+			description := nil ]
+		ifNotNil: [
+			label := selectedTopic label.
+			description := selectedTopic description.
+			selectedParentTopicWithLevel := self topicsToChooseFrom
+				                                detect: [ :each |
+				                                each value
+				                                ==
+				                                (taxonomy parentOf: selectedTopic) ]
+				                                ifNone: [ nil ] ]
+]
+
+{ #category : #accessing }
+TaxonomyBrowserComponent >> selectedParentTopicWithLevel [
+
+	^ selectedParentTopicWithLevel
+]
+
+{ #category : #accessing }
+TaxonomyBrowserComponent >> selectedParentTopicWithLevel: anObject [
+
+	selectedParentTopicWithLevel := anObject
+]
+
 { #category : #accessing }
 TaxonomyBrowserComponent >> taxonomy [
 
@@ -147,18 +189,20 @@ TaxonomyBrowserComponent >> taxonomy: anObject [
 	taxonomy := anObject
 ]
 
-{ #category : #rendering }
+{ #category : #callbacks }
 TaxonomyBrowserComponent >> toggleSelectFor: aTopic [
 
 	selectedTopic == aTopic
-		ifTrue: [ selectedTopic := nil ]
-		ifFalse: [ selectedTopic := aTopic ]
+		ifTrue: [ self select: nil ]
+		ifFalse: [ self select: aTopic ]
 ]
 
 { #category : #rendering }
-TaxonomyBrowserComponent >> topicsToChooseFrom [ 
+TaxonomyBrowserComponent >> topicsToChooseFrom [
+
 	| topics |
-	topics := OrderedCollection new. 
-	taxonomy subtopics do: [ :each | each withSubtopicsOn: topics atLevel: 0 ].
-	^topics
+	topics := OrderedCollection with: 0 -> taxonomy.
+	taxonomy subtopics do: [ :each |
+		each withSubtopicsOn: topics atLevel: 1 ].
+	^ topics
 ]

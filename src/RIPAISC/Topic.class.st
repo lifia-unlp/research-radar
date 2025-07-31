@@ -177,7 +177,7 @@ Topic class >> fromDictionary: aDictionary [
 		  label: (aDictionary at: 'label');
 		  subtopics:
 			  ((aDictionary at: 'subtopics' ifAbsent: [ Set new ]) collect: [
-					   :each | self fromDictionary: each ])
+					   :each | self fromDictionary: each ]) asOrderedCollection
 ]
 
 { #category : #constants }
@@ -374,6 +374,13 @@ Topic class >> qseTaxonomyAsJson [
 '
 ]
 
+{ #category : #subtopics }
+Topic >> addSubtopic: aTopic [
+
+	(subtopics includes: aTopic) ifTrue: [ ^ self ].
+	subtopics add: aTopic
+]
+
 { #category : #accessing }
 Topic >> description [
 
@@ -404,19 +411,43 @@ Topic >> label: anObject [
 	label := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #'maintenance-legacy' }
+Topic >> migrateToOrderedCollections [
+
+	subtopics := subtopics asOrderedCollection.
+	subtopics do: #migrateToOrderedCollections
+]
+
+{ #category : #traversing }
+Topic >> parentOf: aTopic [
+
+	subtopics ifEmpty: [ ^ nil ].
+	(subtopics includes: aTopic) ifTrue: [ ^ self ].
+	^ (subtopics collect: [ :each | each parentOf: aTopic ])
+		  detect: #notNil
+		  ifNone: [ nil ]
+]
+
+{ #category : #subtopics }
+Topic >> removeSubtopic: aTopic [
+
+	subtopics remove: aTopic ifAbsent: [  ].
+	subtopics do: [ :each | each removeSubtopic: aTopic ]
+]
+
+{ #category : #subtopics }
 Topic >> subtopics [
 
 	^ subtopics
 ]
 
-{ #category : #accessing }
+{ #category : #subtopics }
 Topic >> subtopics: anObject [
 
 	subtopics := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #subtopics }
 Topic >> subtopicsWithLevels [
 
 	| col |
@@ -425,7 +456,7 @@ Topic >> subtopicsWithLevels [
 	^ col
 ]
 
-{ #category : #accessing }
+{ #category : #utility }
 Topic >> withSubtopicsOn: aCollection atLevel: myLevel [
 
 	aCollection add: myLevel -> self.
