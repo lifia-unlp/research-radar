@@ -88,17 +88,20 @@ TaxonomyBrowserComponent >> renderContentOn: html [
 TaxonomyBrowserComponent >> renderTaxonomyTopic: aTopic on: html [
 
 	html listItem: [
-		html anchor
-			callback: [ self toggleSelectFor: aTopic ];
-			with: [
-				aTopic == selectedTopic
-					ifTrue: [ html strong: aTopic label ]
-					ifFalse: [ html text: aTopic label ] ].
+		aTopic == taxonomy
+			ifTrue: [ html text: aTopic label ]
+			ifFalse: [
+				html anchor
+					callback: [ self toggleSelectFor: aTopic ];
+					with: [
+						aTopic == selectedTopic
+							ifTrue: [ html strong: aTopic label ]
+							ifFalse: [ html text: aTopic label ] ] ].
+
 		aTopic subtopics ifNotEmpty: [ :subtopics |
 			html unorderedList: [
 				subtopics do: [ :subtopic |
-					self renderTaxonomyTopic: subtopic on: html ] ] ] ].
-
+					self renderTaxonomyTopic: subtopic on: html ] ] ] ]
 ]
 
 { #category : #rendering }
@@ -116,7 +119,7 @@ TaxonomyBrowserComponent >> renderTopicEditorFormOn: html [
 		html formGroup: [
 			html formSelect
 				on: #parent of: self;
-				list: #( 1 2 3 4 5 ) ].
+				list: self topicsToChooseFrom ].
 		html formGroup: [
 			html formButton
 				callback: [ self accept ];
@@ -150,4 +153,12 @@ TaxonomyBrowserComponent >> toggleSelectFor: aTopic [
 	selectedTopic == aTopic
 		ifTrue: [ selectedTopic := nil ]
 		ifFalse: [ selectedTopic := aTopic ]
+]
+
+{ #category : #rendering }
+TaxonomyBrowserComponent >> topicsToChooseFrom [ 
+	| topics |
+	topics := OrderedCollection new. 
+	taxonomy subtopics do: [ :each | each withSubtopicsOn: topics atLevel: 0 ].
+	^topics
 ]

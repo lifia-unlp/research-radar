@@ -11,10 +11,10 @@ Class {
 		'year',
 		'doi',
 		'countries',
-		'topics',
-		'applicationAreas',
 		'producedByRipaisc',
-		'bibtexEntry'
+		'bibtexEntry',
+		'applicationDomainsWithLevels',
+		'topicsWithLevels'
 	],
 	#category : #'RIPAISC-seaside'
 }
@@ -45,22 +45,28 @@ PublicationEditorComponent >> accept [
 		year: year;
 		doi: doi;
 		countries: countries;
-		topics: topics;
-		applicationDomains: applicationAreas;
+		topics: (topicsWithLevels collect: #value);
+		applicationDomains: (applicationDomainsWithLevels collect: #value);
 		byRipaisc: producedByRipaisc.
 	self answer: publication
 ]
 
-{ #category : #accessing }
-PublicationEditorComponent >> applicationAreas [
+{ #category : #rendering }
+PublicationEditorComponent >> applicationDomainsToChooseFrom [
 
-	^ applicationAreas
+	^ self radar applicationDomainsTaxonomy subtopicsWithLevels
 ]
 
 { #category : #accessing }
-PublicationEditorComponent >> applicationAreas: anObject [
+PublicationEditorComponent >> applicationDomainsWithLevels [
 
-	applicationAreas := anObject
+	^ applicationDomainsWithLevels
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> applicationDomainsWithLevels: anObject [
+
+	applicationDomainsWithLevels := anObject
 ]
 
 { #category : #accessing }
@@ -75,30 +81,10 @@ PublicationEditorComponent >> authors: anObject [
 	authors := anObject
 ]
 
-{ #category : #rendering }
-PublicationEditorComponent >> availableApplicationDomains [
+{ #category : #private }
+PublicationEditorComponent >> choose: elements fromElementsWithLevelsIn: elementsWithLevels [
 
-	| col |
-	col := OrderedCollection new.
-	 self radar applicationDomains  do: [ :each |
-		each withSubtopicsOn: col atLevel: 0 ].
-	^ col
-]
-
-{ #category : #rendering }
-PublicationEditorComponent >> availableCountries [
-
-	^ self radar countries
-]
-
-{ #category : #rendering }
-PublicationEditorComponent >> availableTopics [
-
-	| col |
-	col := OrderedCollection new.
-	self radar topics do: [ :each |
-		each withSubtopicsOn: col atLevel: 0 ].
-	^ col
+	^ elementsWithLevels select: [ :each | elements includes: each value ]
 ]
 
 { #category : #accessing }
@@ -111,6 +97,12 @@ PublicationEditorComponent >> countries [
 PublicationEditorComponent >> countries: anObject [
 
 	countries := anObject
+]
+
+{ #category : #rendering }
+PublicationEditorComponent >> countriesToChooseFrom [
+
+	^ self radar countries
 ]
 
 { #category : #accessing }
@@ -176,8 +168,15 @@ PublicationEditorComponent >> publication: anObject [
 	producedByRipaisc := publication byRipaisc.
 	selfArchivingUrl := publication selfArchivingUrl.
 	countries := publication countries.
-	topics := publication topics.
-	applicationAreas := publication applicationDomains.
+	topicsWithLevels := self
+		                    choose: publication topics
+		                    fromElementsWithLevelsIn:
+		                    self topicsToChooseFrom.
+	applicationDomainsWithLevels := self
+		                                choose:
+		                                publication applicationDomains
+		                                fromElementsWithLevelsIn:
+		                                self applicationDomainsToChooseFrom.
 	bibtexEntry := publication bibtexEntry
 ]
 
@@ -185,7 +184,6 @@ PublicationEditorComponent >> publication: anObject [
 PublicationEditorComponent >> renderContentOn: html [
 
 	html container: [
-		
 		html form: [
 			html formGroup: [
 				html label: 'DOI'.
@@ -239,25 +237,25 @@ PublicationEditorComponent >> renderContentOn: html [
 				html multiSelect formControl
 					on: #countries of: self;
 					size: 10;
-					list: self availableCountries ].
+					list: self countriesToChooseFrom ].
 
 			html formGroup: [
 				html label: 'Temas'.
 				html multiSelect formControl
-					on: #topics of: self;
+					on: #topicsWithLevels of: self;
 					labels: [ :each |
 						(String new: each key * 4 withAll: $.) , each value label ];
 					size: 10;
-					list: self availableTopics ].
+					list: self topicsToChooseFrom ].
 
 			html formGroup: [
 				html label: 'Áreas de aplicación'.
 				html multiSelect formControl
-					on: #applicationAreas of: self;
+					on: #applicationDomainsWithLevels of: self;
 					labels: [ :each |
 						(String new: each key * 4 withAll: $.) , each value label ];
 					size: 10;
-					list: self availableApplicationDomains ].
+					list: self applicationDomainsToChooseFrom ].
 
 			html formGroup: [
 				html formButton
@@ -296,16 +294,22 @@ PublicationEditorComponent >> title: anObject [
 	title := anObject
 ]
 
-{ #category : #accessing }
-PublicationEditorComponent >> topics [
+{ #category : #rendering }
+PublicationEditorComponent >> topicsToChooseFrom [
 
-	^topics 
+	^ self radar topicsTaxonomy subtopicsWithLevels
 ]
 
 { #category : #accessing }
-PublicationEditorComponent >> topics: anObject [
+PublicationEditorComponent >> topicsWithLevels [
 
-	topics := anObject
+	^ topicsWithLevels
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> topicsWithLevels: anObject [
+
+	topicsWithLevels := anObject
 ]
 
 { #category : #accessing }

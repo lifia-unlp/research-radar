@@ -417,6 +417,15 @@ Topic >> subtopics: anObject [
 ]
 
 { #category : #accessing }
+Topic >> subtopicsWithLevels [
+
+	| col |
+	col := OrderedCollection new.
+	subtopics do: [ :each | each withSubtopicsOn: col atLevel: 0 ].
+	^ col
+]
+
+{ #category : #accessing }
 Topic >> withSubtopicsOn: aCollection atLevel: myLevel [
 
 	aCollection add: myLevel -> self.
