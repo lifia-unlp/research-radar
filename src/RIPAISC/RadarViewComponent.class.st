@@ -152,6 +152,7 @@ RadarViewComponent >> renderNavBarOn: html [
 { #category : #rendering }
 RadarViewComponent >> renderOverviewForSelectedCountryOn: html [
 
+	html heading: selectedTab.
 	self renderTotalCountOn: html.
 	self renderTopicFrequencyOn: html.
 	publicationsListSubcomponent publications: publications.
@@ -162,7 +163,7 @@ RadarViewComponent >> renderOverviewForSelectedCountryOn: html [
 RadarViewComponent >> renderTopicFrequencyOn: html [
 
 	| counts |
-	html heading: selectedTab.
+
 	counts := (publications flatCollect: #topics as: Bag) valuesAndCounts
 		          associations asSortedCollection: [ :a :b |
 		          a value > b value ].
@@ -179,7 +180,7 @@ RadarViewComponent >> renderTotalCountOn: html [
 
 	html paragraph: [
 		html
-			strong: 'Total count: ';
+			strong: 'Article count: ';
 			text: publications size greaseString ]
 ]
 
