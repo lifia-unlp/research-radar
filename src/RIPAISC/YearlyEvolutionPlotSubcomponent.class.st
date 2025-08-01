@@ -1,18 +1,23 @@
 Class {
 	#name : #YearlyEvolutionPlotSubcomponent,
-	#superclass : #WAComponent,
+	#superclass : #PlotlySubcomponent,
 	#instVars : [
-		'title',
 		'sortedCounts',
 		'startYear',
-		'endYear'
+		'endYear',
+		'publications'
 	],
 	#category : #'RIPAISC-seaside'
 }
 
 { #category : #accessing }
-YearlyEvolutionPlotSubcomponent >> countsDictionary: countsDictionary [
+YearlyEvolutionPlotSubcomponent >> publications: anObject [
 
+	| countsDictionary |
+	publications := anObject.
+	countsDictionary := (publications
+		                     collect: [ :each | each year asNumber ]
+		                     as: Bag) valuesAndCounts.
 	sortedCounts := countsDictionary associations asSortedCollection: [
 		                :a
 		                :b | a key < b key ].
@@ -40,7 +45,6 @@ YearlyEvolutionPlotSubcomponent >> setupScriptForScatterPlot: script elementId: 
 	data := nil.
 	sortedCounts ifNotEmpty: [
 		data := Array with: (PlotlyTrace scatter
-				         name: title;
 				         showlegend: true;
 				         x: (startYear to: endYear) asArray;
 				         y: (sortedCounts collect: #value);
@@ -49,31 +53,11 @@ YearlyEvolutionPlotSubcomponent >> setupScriptForScatterPlot: script elementId: 
 	plotly
 		data: data;
 		layout: (PlotlyLayout new
-				 title: (PlotlyText text: title);
-				 width: 500 height: 300;
+				 width: 500 height: 400;
 				 propertyAt: 'xaxis' put: (Dictionary new
 						  at: 'type' put: 'category';
 						  yourself);
 				 yourself).
 	plotly config beResponsive.
 	script << plotly
-]
-
-{ #category : #accessing }
-YearlyEvolutionPlotSubcomponent >> title [
-
-	^ title
-]
-
-{ #category : #accessing }
-YearlyEvolutionPlotSubcomponent >> title: anObject [
-
-	title := anObject
-]
-
-{ #category : #rendering }
-YearlyEvolutionPlotSubcomponent >> updateRoot: aWARoot [
-
-	super updateRoot: aWARoot.
-	aWARoot javascript url: 'https://cdn.plot.ly/plotly-2.4.2.min.js'
 ]

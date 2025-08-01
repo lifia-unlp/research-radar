@@ -1,19 +1,24 @@
 Class {
 	#name : #TaxonomyPlotSubcomponent,
-	#superclass : #WAComponent,
+	#superclass : #PlotlySubcomponent,
 	#instVars : [
-		'title',
+		'publications',
 		'taxonomy',
+		'aspect',
 		'countsDictionary'
 	],
 	#category : #'RIPAISC-seaside'
 }
 
 { #category : #accessing }
-TaxonomyPlotSubcomponent >> counts: theCounts taxonomy: anObject [
+TaxonomyPlotSubcomponent >> publications: aCollectionOfPublications taxonomy: aTaxonomy aspect: anAspect [
 
-	taxonomy := anObject.
-	countsDictionary := theCounts asDictionary 
+	publications := aCollectionOfPublications.
+	aspect := anAspect.
+	taxonomy := aTaxonomy.
+	countsDictionary := (publications
+		                     flatCollect: [ :each | each perform: aspect ]
+		                     as: Bag) valuesAndCounts
 ]
 
 { #category : #rendering }
@@ -38,10 +43,4 @@ TaxonomyPlotSubcomponent >> renderTaxonomyTopic: aTopic on: html [
 			html unorderedList: [
 				subtopics do: [ :subtopic |
 					self renderTaxonomyTopic: subtopic on: html ] ] ] ]
-]
-
-{ #category : #accessing }
-TaxonomyPlotSubcomponent >> title: anObject [
-
-	title := anObject
 ]

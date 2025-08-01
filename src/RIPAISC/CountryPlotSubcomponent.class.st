@@ -1,20 +1,12 @@
 Class {
 	#name : #CountryPlotSubcomponent,
-	#superclass : #WAComponent,
+	#superclass : #PlotlySubcomponent,
 	#instVars : [
-		'title',
-		'counts',
-		'countries'
+		'publications',
+		'counts'
 	],
 	#category : #'RIPAISC-seaside'
 }
-
-{ #category : #'as yet unclassified' }
-CountryPlotSubcomponent >> counts: theCounts countries: theCountries [
-
-	counts := theCounts associations.
-	countries := theCountries
-]
 
 { #category : #'javascript-examples' }
 CountryPlotSubcomponent >> donutOn: script elementId: elementId [
@@ -29,11 +21,26 @@ CountryPlotSubcomponent >> donutOn: script elementId: elementId [
 				 hole: 0.4;
 				 labels: labels) };
 		layout: (PlotlyLayout new
-				 title: (PlotlyText text: 'Donut Chart');
-				 width: 500 height: 300;
+"				 title: (PlotlyText text: 'Donut Chart');"
+				 width: 500 height: 400;
 				 yourself).
 	plotly config beResponsive.
 	script << plotly
+]
+
+{ #category : #'javascript-examples' }
+CountryPlotSubcomponent >> publications: anObject [
+
+	| countsDictionary |
+	publications := anObject.
+	countsDictionary := (publications
+		                     flatCollect:  [ :each | each countries]
+		                     as: Bag) valuesAndCounts.
+	counts := countsDictionary associations asSortedCollection: [
+		                :a
+		                :b | a key < b key ].
+
+	
 ]
 
 { #category : #'javascript-examples' }
@@ -46,24 +53,4 @@ CountryPlotSubcomponent >> renderContentOn: html [
 	html document addLoadScript:
 		(JSStream on: (html jQuery script: [ :script |
 				  self donutOn: script elementId: html lastId ]))
-]
-
-{ #category : #'javascript-examples' }
-CountryPlotSubcomponent >> scriptExampleDonutOn: script elementId: elementId [
-
-  | plotly |
-  plotly := script plotly: elementId.
-  plotly
-    data:
-      {(PlotlyTrace pie
-        values: #(19 , 26 , 55);
-        hole: 0.4;
-        labels: #('Residential' , 'Non-Residential' , 'Utility'))};
-    layout:
-      (PlotlyLayout new
-        title: (PlotlyText text: 'Donut Chart');
-        width: 500 height: 300;
-        yourself).
-  plotly config beResponsive.
-  script << plotly
 ]
