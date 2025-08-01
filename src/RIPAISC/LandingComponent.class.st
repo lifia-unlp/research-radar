@@ -26,7 +26,7 @@ LandingComponent >> renderLoginColumnOn: html [
 					  with: 'Intranet' ].
 			  html paragraph: [
 				  html anchor
-					  callback: [  ];
+					  callback: [ self call: RadarViewComponent new ];
 					  with: 'Radar' ] ]
 		  mediumSize: 6
 ]
