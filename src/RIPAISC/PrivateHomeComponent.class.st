@@ -8,7 +8,6 @@ Class {
 PrivateHomeComponent >> renderContentOn: html [
 
 	html container: [
-		self renderLinkToRadarOn: html.
 		self renderLinkToPublicationsOn: html.
 		self renderLinkToTopicsTaxonomyOn: html.
 		self renderLinkToApplicationDomainsTaxonomyOn: html ]
@@ -37,18 +36,6 @@ PrivateHomeComponent >> renderLinkToPublicationsOn: html [
 							 caller: self;
 							 yourself) ];
 			with: 'Publicaciones' ]
-]
-
-{ #category : #rendering }
-PrivateHomeComponent >> renderLinkToRadarOn: html [
-
-	html paragraph: [
-		html anchor
-			callback: [
-				self call: (RadarViewComponent  new
-							 caller: self;
-							 yourself) ];
-			with: 'Radar' ]
 ]
 
 { #category : #rendering }

@@ -70,27 +70,37 @@ RadarViewComponent >> publicationsCountByYears [
 RadarViewComponent >> renderContentOn: html [
 
 	html container: [
-		html strong: 'Evolution of publications'.
-		yearlyEvolutionPlotSubcomponent countsDictionary:
-			self publicationsCountByYears.
-		html render: yearlyEvolutionPlotSubcomponent.
-		
-				html strong: 'Publications by country'.
-		countryPlotSubcomponent
-			counts: self publicationsCountByCountries
-			countries: self radar countries.
-		html render: countryPlotSubcomponent .
-
-		html strong: 'Publications by topic'.
-		topicsTaxonomyPlotSubcomponent
-			counts: self publicationsCountByTopics
-			taxonomy: self radar topicsTaxonomy.
-		html render: topicsTaxonomyPlotSubcomponent.
-
-
-		html strong: 'Publications by application domain'.
-		applicationDomainsTaxonomyPlotSubcomponent
-			counts: self publicationsCountByApplicationDomains
-			taxonomy: self radar applicationDomainsTaxonomy.
-		html render: applicationDomainsTaxonomyPlotSubcomponent ]
+		html row: [
+			html
+				column: [
+					html strong: 'Publications by country'.
+					countryPlotSubcomponent
+						counts: self publicationsCountByCountries
+						countries: self radar countries.
+					html render: countryPlotSubcomponent ]
+				mediumSize: 6.
+			html
+				column: [
+					html strong: 'Evolution of publications'.
+					yearlyEvolutionPlotSubcomponent countsDictionary:
+						self publicationsCountByYears.
+					html render: yearlyEvolutionPlotSubcomponent ]
+				mediumSize: 6 ].
+		html row: [
+			html
+				column: [
+					html strong: 'Publications by topic'.
+					topicsTaxonomyPlotSubcomponent
+						counts: self publicationsCountByTopics
+						taxonomy: self radar topicsTaxonomy.
+					html render: topicsTaxonomyPlotSubcomponent ]
+				mediumSize: 6.
+			html
+				column: [
+					html strong: 'Publications by application domain'.
+					applicationDomainsTaxonomyPlotSubcomponent
+						counts: self publicationsCountByApplicationDomains
+						taxonomy: self radar applicationDomainsTaxonomy.
+					html render: applicationDomainsTaxonomyPlotSubcomponent ]
+				mediumSize: 6 ] ]
 ]

@@ -50,7 +50,7 @@ YearlyEvolutionPlotSubcomponent >> setupScriptForScatterPlot: script elementId: 
 		data: data;
 		layout: (PlotlyLayout new
 				 title: (PlotlyText text: title);
-				 width: 1000 height: 500;
+				 width: 500 height: 300;
 				 propertyAt: 'xaxis' put: (Dictionary new
 						  at: 'type' put: 'category';
 						  yourself);

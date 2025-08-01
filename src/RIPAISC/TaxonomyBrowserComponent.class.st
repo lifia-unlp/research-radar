@@ -111,7 +111,7 @@ TaxonomyBrowserComponent >> publicationsForSelectedTopic [
 
 	publicationsRetrievingBlock ifNil: [ ^ Set new ].
 	^ publicationsRetrievingBlock value select: [ :each |
-		  each topics includes: selectedTopic ]
+		  each topics , each applicationDomains includes: selectedTopic ]
 ]
 
 { #category : #accessing }
