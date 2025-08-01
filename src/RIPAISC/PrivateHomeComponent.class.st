@@ -10,13 +10,17 @@ PrivateHomeComponent >> renderContentOn: html [
 	html container: [
 		html paragraph: [
 			html anchor
-				callback: [ self call: (PublicationsListComponent caller: self) ];
+				callback: [
+					self call: (PublicationsBrowserComponent new
+								 caller: self;
+								 yourself) ];
 				with: 'Publicaciones' ].
 		html paragraph: [
 			html anchor
 				callback: [
 					self call: ((TaxonomyBrowserComponent caller: self)
 								 taxonomy: self radar topicsTaxonomy;
+								 publicationsRetrievingBlock: [ self radar publications ];
 								 yourself) ];
 				with: 'Topics taxonomy' ].
 		html paragraph: [
@@ -24,6 +28,7 @@ PrivateHomeComponent >> renderContentOn: html [
 				callback: [
 					self call: ((TaxonomyBrowserComponent caller: self)
 								 taxonomy: self radar applicationDomainsTaxonomy;
+								 publicationsRetrievingBlock: [ self radar publications ];
 								 yourself) ];
 				with: 'Application domains taxonomy' ] ]
 ]

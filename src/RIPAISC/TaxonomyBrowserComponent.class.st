@@ -3,10 +3,12 @@ Class {
 	#superclass : #RipaiscAbstractComponent,
 	#instVars : [
 		'taxonomy',
+		'publicationsRetrievingBlock',
 		'label',
 		'description',
 		'selectedParentTopicWithLevel',
-		'selectedTopic'
+		'selectedTopic',
+		'publicationsListSubcomponent'
 	],
 	#category : #'RIPAISC-seaside'
 }
@@ -18,7 +20,8 @@ TaxonomyBrowserComponent >> accept [
 	selectedTopic description: description.
 	self
 		changeParentOf: selectedTopic
-		to: selectedParentTopicWithLevel value
+		to: selectedParentTopicWithLevel value.
+	self  save.
 ]
 
 { #category : #callbacks }
@@ -46,6 +49,20 @@ TaxonomyBrowserComponent >> changeParentOf: aTopic to: parentTopic [
 	parentTopic addSubtopic: aTopic 
 ]
 
+{ #category : #rendering }
+TaxonomyBrowserComponent >> children [
+
+	^ { publicationsListSubcomponent }
+]
+
+{ #category : #callbacks }
+TaxonomyBrowserComponent >> deleteSelectedTopic [
+
+	taxonomy removeSubtopic: selectedTopic.
+	self select: nil. 
+	self  save.
+]
+
 { #category : #accessing }
 TaxonomyBrowserComponent >> description [
 
@@ -58,6 +75,14 @@ TaxonomyBrowserComponent >> description: anObject [
 	description := anObject
 ]
 
+{ #category : #initialize }
+TaxonomyBrowserComponent >> initialize [
+	super initialize .
+	publicationsListSubcomponent := PublicationsListSubComponent new.
+	publicationsListSubcomponent parent: self.
+	
+]
+
 { #category : #accessing }
 TaxonomyBrowserComponent >> label [
 
@@ -68,6 +93,20 @@ TaxonomyBrowserComponent >> label [
 TaxonomyBrowserComponent >> label: anObject [
 
 	label := anObject
+]
+
+{ #category : #accessing }
+TaxonomyBrowserComponent >> publicationsForSelectedTopic [
+
+	publicationsRetrievingBlock ifNil: [ ^ Set new ].
+	^ publicationsRetrievingBlock value select: [ :each |
+		  each topics includes: selectedTopic ]
+]
+
+{ #category : #accessing }
+TaxonomyBrowserComponent >> publicationsRetrievingBlock: anObject [
+
+	publicationsRetrievingBlock := anObject
 ]
 
 { #category : #rendering }
@@ -87,8 +126,50 @@ TaxonomyBrowserComponent >> renderContentOn: html [
 				mediumSize: 6.
 			html
 				column: [
-				selectedTopic ifNotNil: [ self renderTopicEditorFormOn: html ] ]
+					selectedTopic ifNotNil: [
+						self renderTopicEditorFormOn: html.
+						self renderPublicationsForSelectedTopicOn: html ] ]
 				mediumSize: 6 ] ]
+]
+
+{ #category : #rendering }
+TaxonomyBrowserComponent >> renderEditorButtonsOn: html [
+
+	^ html formGroup: [
+		  html row: [
+			  html
+				  column: [
+					  html formButton
+						  callback: [ self accept ];
+						  bePrimary;
+						  beSmall;
+						  with: 'Accept'.
+					  html space.
+					  html formButton
+						  callback: [ self cancel ];
+						  beSecondary;
+						  beSmall;
+						  with: 'Cancel' ]
+				  mediumSize: 6.
+
+			  html
+				  column: [
+					  html space.
+					  html outlineButton
+						  callback: [ self deleteSelectedTopic ];
+						  beDanger;
+						  beSmall;
+						  with: 'Delete' ]
+				  mediumSize: 6 ] ]
+]
+
+{ #category : #rendering }
+TaxonomyBrowserComponent >> renderPublicationsForSelectedTopicOn: html [
+
+	self publicationsForSelectedTopic ifNotEmpty: [ :pubs |
+		html break.
+		publicationsListSubcomponent publications: pubs.
+		html render: publicationsListSubcomponent ]
 ]
 
 { #category : #rendering }
@@ -104,7 +185,8 @@ TaxonomyBrowserComponent >> renderTaxonomyTopic: aTopic on: html [
 						aTopic == selectedTopic 
 							ifTrue: [ html strong: aTopic label ]
 							ifFalse: [ html text: aTopic label ] ] ].
-
+		html break.
+		html text: aTopic description .
 		aTopic subtopics ifNotEmpty: [ :subtopics |
 			html unorderedList: [
 				subtopics do: [ :subtopic |
@@ -130,19 +212,7 @@ TaxonomyBrowserComponent >> renderTopicEditorFormOn: html [
 				labels: [ :each |
 					(String new: each key * 4 withAll: $.) , each value label ];
 				list: self topicsToChooseFrom ].
-		html formGroup: [
-			html formButton
-				callback: [ self accept ];
-				bePrimary;
-				beSmall;
-				with: 'Accept'.
-			html space.
-			html formButton
-				callback: [ self cancel ];
-				beSecondary;
-				beSmall;
-				with: 'Cancel'.
-			html space ] ]
+		self renderEditorButtonsOn: html ]
 ]
 
 { #category : #callbacks }
@@ -175,12 +245,6 @@ TaxonomyBrowserComponent >> selectedParentTopicWithLevel [
 TaxonomyBrowserComponent >> selectedParentTopicWithLevel: anObject [
 
 	selectedParentTopicWithLevel := anObject
-]
-
-{ #category : #accessing }
-TaxonomyBrowserComponent >> taxonomy [
-
-	^ taxonomy
 ]
 
 { #category : #accessing }
