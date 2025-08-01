@@ -45,8 +45,9 @@ TaxonomyBrowserComponent >> cancel [
 { #category : #callbacks }
 TaxonomyBrowserComponent >> changeParentOf: aTopic to: parentTopic [
 
+	(parentTopic subtopics includes: aTopic) ifTrue: [ ^ self ].
 	taxonomy removeSubtopic: aTopic.
-	parentTopic addSubtopic: aTopic 
+	parentTopic addSubtopic: aTopic
 ]
 
 { #category : #rendering }
@@ -93,6 +94,16 @@ TaxonomyBrowserComponent >> label [
 TaxonomyBrowserComponent >> label: anObject [
 
 	label := anObject
+]
+
+{ #category : #callbacks }
+TaxonomyBrowserComponent >> moveBackwards: aTopic [
+	taxonomy moveBackwards: aTopic
+]
+
+{ #category : #callbacks }
+TaxonomyBrowserComponent >> moveForward: aTopic [
+	taxonomy moveForward: aTopic
 ]
 
 { #category : #accessing }
@@ -164,6 +175,19 @@ TaxonomyBrowserComponent >> renderEditorButtonsOn: html [
 ]
 
 { #category : #rendering }
+TaxonomyBrowserComponent >> renderMoveControlsFor: aTopic on: html [
+
+	html space.
+	html anchor
+		callback: [ self moveBackwards: aTopic ];
+		with: '[Up]'.
+	html space.
+	html anchor
+		callback: [ self moveForward: aTopic ];
+		with: '[Down]'
+]
+
+{ #category : #rendering }
 TaxonomyBrowserComponent >> renderPublicationsForSelectedTopicOn: html [
 
 	self publicationsForSelectedTopic ifNotEmpty: [ :pubs |
@@ -182,11 +206,13 @@ TaxonomyBrowserComponent >> renderTaxonomyTopic: aTopic on: html [
 				html anchor
 					callback: [ self toggleSelectFor: aTopic ];
 					with: [
-						aTopic == selectedTopic 
+						aTopic == selectedTopic
 							ifTrue: [ html strong: aTopic label ]
 							ifFalse: [ html text: aTopic label ] ] ].
+		self renderMoveControlsFor: aTopic on: html.
 		html break.
-		html text: aTopic description .
+		html text: aTopic description.
+
 		aTopic subtopics ifNotEmpty: [ :subtopics |
 			html unorderedList: [
 				subtopics do: [ :subtopic |

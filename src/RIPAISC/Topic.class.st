@@ -418,6 +418,30 @@ Topic >> migrateToOrderedCollections [
 	subtopics do: #migrateToOrderedCollections
 ]
 
+{ #category : #subtopics }
+Topic >> moveBackwards: aTopic [
+
+	(subtopics includes: aTopic) ifTrue: [
+		| pos |
+		pos := subtopics indexOf: aTopic.
+		pos = 1 ifTrue: [ ^ self ].
+		subtopics swap: pos with: pos - 1.
+		^ self ].
+	subtopics do: [ :each | each moveBackwards: aTopic ]
+]
+
+{ #category : #subtopics }
+Topic >> moveForward: aTopic [
+
+	(subtopics includes: aTopic) ifTrue: [
+		| pos |
+		pos := subtopics indexOf: aTopic.
+		pos = subtopics size ifTrue: [ ^ self ].
+		subtopics swap: pos with: pos + 1.
+		^ self ].
+	subtopics do: [ :each | each moveForward: aTopic ]
+]
+
 { #category : #traversing }
 Topic >> parentOf: aTopic [
 

@@ -14,7 +14,8 @@ Class {
 		'producedByRipaisc',
 		'bibtexEntry',
 		'applicationDomainsWithLevels',
-		'topicsWithLevels'
+		'topicsWithLevels',
+		'relevanceToQse'
 	],
 	#category : #'RIPAISC-seaside'
 }
@@ -47,6 +48,7 @@ PublicationEditorComponent >> accept [
 		countries: countries;
 		topics: (topicsWithLevels collect: #value);
 		applicationDomains: (applicationDomainsWithLevels collect: #value);
+		relevanceToQse: relevanceToQse ;
 		byRipaisc: producedByRipaisc.
 	self answer: publication
 ]
@@ -168,6 +170,7 @@ PublicationEditorComponent >> publication: anObject [
 	producedByRipaisc := publication byRipaisc.
 	selfArchivingUrl := publication selfArchivingUrl.
 	countries := publication countries.
+	relevanceToQse := publication relevanceToQse .
 	topicsWithLevels := self
 		                    choose: publication topics
 		                    fromElementsWithLevelsIn:
@@ -178,6 +181,18 @@ PublicationEditorComponent >> publication: anObject [
 		                                fromElementsWithLevelsIn:
 		                                self applicationDomainsToChooseFrom.
 	bibtexEntry := publication bibtexEntry
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> relevanceToQse [
+
+	^ relevanceToQse
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> relevanceToQse: anObject [
+
+	relevanceToQse := anObject
 ]
 
 { #category : #rendering }
@@ -193,17 +208,17 @@ PublicationEditorComponent >> renderContentOn: html [
 						callback: [ self fetchBibtex ];
 						bePrimary;
 						beSmall;
-						with: 'Pre-cargar' ] ].
+						with: 'Fetch' ] ].
 			html textInput formControl on: #doi of: self.
 
 
 			html formGroup: [
-				html label: 'Título'.
+				html label: 'Title'.
 				html textInput formControl on: #title of: self ].
 
 
 			html formGroup: [
-				html label: 'Año'.
+				html label: 'Year'.
 				html textInput formControl on: #year of: self ].
 
 			html formGroup: [
@@ -219,7 +234,7 @@ PublicationEditorComponent >> renderContentOn: html [
 								with: 'Algun autor pertenece a RIPAISC?' ] ].
 
 			html formGroup: [
-				html label: 'Resumen'.
+				html label: 'Abstract'.
 				html textArea formControl
 					on: #abstract of: self;
 					rows: 15 ].
@@ -229,18 +244,18 @@ PublicationEditorComponent >> renderContentOn: html [
 				html textInput formControl on: #url of: self ].
 
 			html formGroup: [
-				html label: 'URL de autoarchivado'.
+				html label: 'Self archiving URL'.
 				html textInput formControl on: #selfArchivingUrl of: self ].
 
 			html formGroup: [
-				html label: 'Páises involucrados'.
+				html label: 'Iberoamerican countries'.
 				html multiSelect formControl
 					on: #countries of: self;
 					size: 10;
 					list: self countriesToChooseFrom ].
 
 			html formGroup: [
-				html label: 'Temas'.
+				html label: 'Topics'.
 				html multiSelect formControl
 					on: #topicsWithLevels of: self;
 					labels: [ :each |
@@ -249,7 +264,7 @@ PublicationEditorComponent >> renderContentOn: html [
 					list: self topicsToChooseFrom ].
 
 			html formGroup: [
-				html label: 'Áreas de aplicación'.
+				html label: 'Application domains'.
 				html multiSelect formControl
 					on: #applicationDomainsWithLevels of: self;
 					labels: [ :each |
@@ -257,16 +272,23 @@ PublicationEditorComponent >> renderContentOn: html [
 					size: 10;
 					list: self applicationDomainsToChooseFrom ].
 
+
+			html formGroup: [
+				html label: 'Relevance to QSE'.
+				html formSelect
+					on: #relevanceToQse of: self;
+					list: self valuesForRelevanceToQse ].
+
 			html formGroup: [
 				html formButton
 					callback: [ self accept ];
 					bePrimary;
-					with: 'Aceptar'.
+					with: 'Accept'.
 				html space.
 				html formButton
 					callback: [ self answer: nil ];
 					beSecondary;
-					with: 'Cancelar'.
+					with: 'Cancel'.
 				html space ] ] ]
 ]
 
@@ -322,6 +344,12 @@ PublicationEditorComponent >> url [
 PublicationEditorComponent >> url: anObject [
 
 	url := anObject
+]
+
+{ #category : #rendering }
+PublicationEditorComponent >> valuesForRelevanceToQse [
+
+	^ { 'Clear'. 'Moderately clear'. 'Unclear'. nil }
 ]
 
 { #category : #accessing }

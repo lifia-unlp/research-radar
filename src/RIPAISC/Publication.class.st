@@ -8,7 +8,8 @@ Class {
 		'ripaiscNodes',
 		'topics',
 		'applicationDomains',
-		'countries'
+		'countries',
+		'relevanceToQse'
 	],
 	#category : #'RIPAISC-model'
 }
@@ -106,6 +107,18 @@ Publication >> initialize [
 	applicationDomains := OrderedCollection new.
 	topics := OrderedCollection new. 
 	bibtexEntry := BibtexEntry new. 
+]
+
+{ #category : #accessing }
+Publication >> relevanceToQse [
+
+	^ relevanceToQse
+]
+
+{ #category : #accessing }
+Publication >> relevanceToQse: anObject [
+
+	relevanceToQse := anObject
 ]
 
 { #category : #accessing }
