@@ -107,6 +107,20 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 			  mediumSize: 6 ]
 ]
 
+{ #category : #rendering }
+RadarViewComponent >> renderHierarchicalTopicFrequencyOn: html [
+
+	| counts |
+	counts := self radar topicsTaxonomy subtopics collect: [ :each |
+		          TopicProductCount topic: each publications: publications ].
+	html paragraph: [
+		html
+			strong: 'First level topic frequency: ';
+			text: (counts collect: [ :each |
+						 each topic label , ' (' , each familyCount greaseString , ')' ])
+					asCommaStringAnd ]
+]
+
 { #category : #hooks }
 RadarViewComponent >> renderNavBarOn: html [
 
@@ -155,6 +169,7 @@ RadarViewComponent >> renderOverviewForSelectedCountryOn: html [
 
 	html heading: selectedTab.
 	self renderTotalCountOn: html.
+	self renderHierarchicalTopicFrequencyOn: html.
 	self renderTopicFrequencyOn: html.
 	publicationsListSubcomponent publications: publications.
 	html render: publicationsListSubcomponent
@@ -170,7 +185,7 @@ RadarViewComponent >> renderTopicFrequencyOn: html [
 		          a value > b value ].
 	html paragraph: [
 		html
-			strong: 'Topic frequency: ';
+			strong: 'Detailed topic frequency: ';
 			text: (counts collect: [ :each |
 						 each key label , ' (' , each value greaseString , ')' ])
 					asCommaStringAnd ]

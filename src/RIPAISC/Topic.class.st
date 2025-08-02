@@ -411,6 +411,12 @@ Topic >> label: anObject [
 	label := anObject
 ]
 
+{ #category : #testing }
+Topic >> matches: aPublication [
+
+  ^ aPublication topics includes: self
+]
+
 { #category : #'maintenance-legacy' }
 Topic >> migrateToOrderedCollections [
 
@@ -478,6 +484,20 @@ Topic >> subtopicsWithLevels [
 	col := OrderedCollection new.
 	subtopics do: [ :each | each withSubtopicsOn: col atLevel: 0 ].
 	^ col
+]
+
+{ #category : #testing }
+Topic >> withSubtopics [
+
+	^ (subtopics flatCollect: #withSubtopics)
+		  addFirst: self;
+		  yourself
+]
+
+{ #category : #testing }
+Topic >> withSubtopicsMatches: aPublication [
+
+  ^ aPublication topics includesAny: self withSubtopics. 
 ]
 
 { #category : #utility }
