@@ -114,14 +114,15 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 RadarViewComponent >> renderHierarchicalTopicFrequencyOn: html [
 
 	| counts |
-	counts := self radar topicsTaxonomy subtopics collect: [ :each |
-		          TopicProductCount topic: each publications: publications ].
+	counts := (self radar topicsTaxonomy subtopics collect: [ :each |
+		           TopicProductCount topic: each publications: publications ])
+		          asSortedCollection: [ :a :b |
+		          a familyCount > b familyCount ].
+
 	html paragraph: [
-		html
-			strong: 'First level topic frequency: ';
-			text: (counts collect: [ :each |
-						 each topic label , ' (' , each familyCount greaseString , ')' ])
-					asCommaStringAnd ]
+		html text: (counts collect: [ :each |
+				 each topic label , ' (' , each familyCount greaseString , ')' ])
+				asCommaStringAnd ]
 ]
 
 { #category : #hooks }
@@ -181,17 +182,28 @@ RadarViewComponent >> renderOverviewForSelectedCountryOn: html [
 { #category : #rendering }
 RadarViewComponent >> renderTopicFrequencyOn: html [
 
-	| counts |
+	| counts organizedTopics |
+	organizedTopics := self radar topicsTaxonomy withSubtopics.
+	organizedTopics remove: self radar topicsTaxonomy.
 
-	counts := (publications flatCollect: #topics as: Bag) valuesAndCounts
-		          associations asSortedCollection: [ :a :b |
-		          a value > b value ].
+	counts := organizedTopics collect: [ :each |
+		          TopicProductCount topic: each publications: publications ].
+
 	html paragraph: [
-		html
-			strong: 'Detailed topic frequency: ';
-			text: (counts collect: [ :each |
-						 each key label , ' (' , each value greaseString , ')' ])
-					asCommaStringAnd ]
+		counts
+			do: [ :each |
+				| text elem |
+				text := each topic label , '(' , each ownCount greaseString , '/'
+				        , each familyCount greaseString , ')'.
+				elem := html span.
+				each familyCount = 0
+					ifTrue: [ elem class: 'tagcloud-light' ]
+					ifFalse: [
+						each familyCount <= 5
+							ifTrue: [ elem class: 'tagcloud-medium' ]
+							ifFalse: [ elem class: 'tagcloud-dark' ] ].
+				elem with: each topic label ]
+			separatedBy: [ html text: ', ' ] ]
 ]
 
 { #category : #rendering }
@@ -224,4 +236,20 @@ RadarViewComponent >> selectRipaisc [
 	self selectCountry: 'RIPAISC'.
 	publications := self radar publications select: [ :each |
 		                each byRipaisc ]
+]
+
+{ #category : #callbacks }
+RadarViewComponent >> style [
+
+	^ '.tagcloud-light {
+  color: #d0dcf2; 
+}
+
+.tagcloud-medium {
+  color: #97c0f4; 
+}
+
+.tagcloud-dark {
+  color: #073b92; 
+}'
 ]
