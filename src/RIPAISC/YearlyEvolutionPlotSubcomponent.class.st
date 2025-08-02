@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'groupByBlock',
 		'publications',
-		'collectionsOfNamedCounts'
+		'collectionsOfNamedCounts',
+		'includeTotalCount'
 	],
 	#category : #'RIPAISC-seaside'
 }
@@ -19,7 +20,8 @@ YearlyEvolutionPlotSubcomponent >> groupByBlock: anObject [
 YearlyEvolutionPlotSubcomponent >> initialize [
 
 	super initialize.
-	groupByBlock := [ :each | '' ]
+	groupByBlock := [ :each | Set with: '' ].
+	includeTotalCount := true.
 ]
 
 { #category : #rendering }
@@ -88,16 +90,21 @@ YearlyEvolutionPlotSubcomponent >> setupScriptForScatterPlot: script elementId: 
 YearlyEvolutionPlotSubcomponent >> updateCollectionOfNamedCounts [
 
 	| groups |
-	groups := publications collect: groupByBlock as: Set.
+	groups := publications flatCollectAsSet: groupByBlock.
 	collectionsOfNamedCounts := groups collect: [ :group |
 		                            | selection |
 		                            selection := publications select: [
 			                                         :each |
 			                                         (groupByBlock value: each)
-			                                         = group ].
+				                                         includes: group ].
 		                            group
 		                            -> (self yearlyCountsFor: selection) ].
-	^ collectionsOfNamedCounts
+	collectionsOfNamedCounts add:
+		'Total' -> (self yearlyCountsFor: publications).
+	collectionsOfNamedCounts := collectionsOfNamedCounts
+		                            asSortedCollection: [ :a :b |
+		                            (a value sumNumbers: #value)
+		                            > (b value sumNumbers: #value) ]
 ]
 
 { #category : #utility }

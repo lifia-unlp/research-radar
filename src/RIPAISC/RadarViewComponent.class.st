@@ -31,6 +31,7 @@ RadarViewComponent >> initialize [
 	yearlyEvolutionPlotSubcomponent := YearlyEvolutionPlotSubcomponent
 		                                   new
 		                                   parent: self;
+		groupByBlock: [ :each | each countries ]
 		                                   yourself.
 	topicsTaxonomyPlotSubcomponent := TaxonomyPlotSubcomponent new
 		                                  parent: self;
