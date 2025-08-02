@@ -71,7 +71,11 @@ RadarViewComponent >> renderContentOn: html [
 
 { #category : #rendering }
 RadarViewComponent >> renderGeneralOverviewOn: html [
-	html heading: selectedTab .
+
+	html heading: selectedTab.
+	html paragraph: [
+		html strong:
+			'Total number of  publications: ' , publications size greaseString ].
 	html row: [
 		html
 			column: [
@@ -82,8 +86,7 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 		html
 			column: [
 				html strong: 'Evolution of publications'.
-				yearlyEvolutionPlotSubcomponent publications:
-					publications.
+				yearlyEvolutionPlotSubcomponent publications: publications.
 				html render: yearlyEvolutionPlotSubcomponent ]
 			mediumSize: 6 ].
 	^ html row: [

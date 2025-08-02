@@ -18,12 +18,11 @@ CountryPlotSubcomponent >> donutOn: script elementId: elementId [
 	plotly
 		data: { (PlotlyTrace pie
 				 values: values;
+				 propertyAt: 'textinfo' put: 'value'; 
 				 hole: 0.4;
 				 labels: labels) };
 		layout: (PlotlyLayout new
-"				 title: (PlotlyText text: 'Donut Chart');"
-"				 width: 500 height: 400;
-"				 yourself).
+				 yourself).
 	plotly config beResponsive.
 	script << plotly
 ]
