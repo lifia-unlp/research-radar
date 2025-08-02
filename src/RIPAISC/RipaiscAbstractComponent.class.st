@@ -41,7 +41,7 @@ RipaiscAbstractComponent >> rendererClass [
 { #category : #'save-restore' }
 RipaiscAbstractComponent >> repositoryFilename [
 
-	^ 'ripaisc-radar.ston'
+	^ 'ripaisc-radar'
 ]
 
 { #category : #'save-restore' }

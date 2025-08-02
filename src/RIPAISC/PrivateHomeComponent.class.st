@@ -10,7 +10,8 @@ PrivateHomeComponent >> renderContentOn: html [
 	html container: [
 		self renderLinkToPublicationsOn: html.
 		self renderLinkToTopicsTaxonomyOn: html.
-		self renderLinkToApplicationDomainsTaxonomyOn: html ]
+		self renderLinkToApplicationDomainsTaxonomyOn: html.
+		self renderLinkToUploadFileOn: html ]
 ]
 
 { #category : #rendering }
@@ -49,4 +50,16 @@ PrivateHomeComponent >> renderLinkToTopicsTaxonomyOn: html [
 							 publicationsRetrievingBlock: [ self radar publications ];
 							 yourself) ];
 			with: 'Topics taxonomy' ]
+]
+
+{ #category : #rendering }
+PrivateHomeComponent >> renderLinkToUploadFileOn: html [
+
+	html paragraph: [
+		html anchor
+			callback: [
+				self call: (BulkImportWizard new
+							 caller: self;
+							 yourself) ];
+			with: 'Upload' ]
 ]

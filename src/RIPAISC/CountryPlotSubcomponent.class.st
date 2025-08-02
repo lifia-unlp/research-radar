@@ -22,8 +22,8 @@ CountryPlotSubcomponent >> donutOn: script elementId: elementId [
 				 labels: labels) };
 		layout: (PlotlyLayout new
 "				 title: (PlotlyText text: 'Donut Chart');"
-				 width: 500 height: 400;
-				 yourself).
+"				 width: 500 height: 400;
+"				 yourself).
 	plotly config beResponsive.
 	script << plotly
 ]

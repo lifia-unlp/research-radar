@@ -25,12 +25,10 @@ Radar class >> resetSingleton [
 { #category : #accessing }
 Radar class >> save: aRadar on: aFilename [
 
+	| file |
 	monitor critical: [
-		aFilename asFileReference writeStreamDo: [ :stream |
-			(STONWriter on: stream)
-				prettyPrint: true;
-				newLine: OSPlatform current lineEnding;
-				nextPut: aRadar ] ]
+		file := FileLocator workingDirectory / (aFilename , '.fuel').
+		FLSerializer serialize: aRadar toFileNamed: file fullName ]
 ]
 
 { #category : #accessing }
