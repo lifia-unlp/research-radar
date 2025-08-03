@@ -62,7 +62,7 @@ RadarViewComponent >> renderContentOn: html [
 
 	html container: [
 		self renderNavBarOn: html.
-		selectedTab = 'Latinamerica' ifTrue: [
+		selectedTab = 'Latin America' ifTrue: [
 			^ self renderGeneralOverviewOn: html ].
 		selectedTab = 'RIPAISC' ifTrue: [
 			^ self renderGeneralOverviewOn: html ].
@@ -152,7 +152,7 @@ RadarViewComponent >> renderNavBarOn: html [
 						html navigationItem with: [
 								html navigationLink
 									callback: [ self selectLatinamerica ];
-									with: 'Latinamerica';
+									with: 'Latin America';
 									yourself ].
 						html navigationItem with: [
 							html navigationLink
@@ -226,7 +226,7 @@ RadarViewComponent >> selectCountry: aCountryName [
 { #category : #callbacks }
 RadarViewComponent >> selectLatinamerica [
 
-	self selectCountry: 'Latinamerica'.
+	self selectCountry: 'Latin America'.
 	publications := self radar publications
 ]
 

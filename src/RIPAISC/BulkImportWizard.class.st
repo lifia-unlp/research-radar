@@ -76,7 +76,9 @@ BulkImportWizard >> createBibtexEntriesFromRows [
 		                         entry author:
 			                         (each at: (headerRow indexOf: authorColum)).
 		                         entry abstract:
-			                         ((each at: 17) , '\\Affiliations '
+			                         ((each at:
+				                           (headerRow indexOf: abstractColumn))
+			                          , '\\Affiliations '
 			                          ,
 			                          (each at:
 				                           (headerRow indexOf: affiliationsColumn)))
@@ -154,7 +156,10 @@ BulkImportWizard >> readFile [
 { #category : #callbacks }
 BulkImportWizard >> receiveFile: aFile [
 
-	'uploaded-file.csv' asFileReference binaryWriteStreamDo: [
+	| file |
+	file := 'uploaded-file.csv' asFileReference.
+	file exists ifTrue: [ file delete ].
+	file binaryWriteStreamDo: [
 		:uploadStream | uploadStream nextPutAll: aFile rawContents ]
 ]
 
