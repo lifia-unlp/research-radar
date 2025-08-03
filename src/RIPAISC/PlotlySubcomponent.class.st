@@ -1,11 +1,11 @@
 Class {
-	#name : #PlotlySubcomponent,
+	#name : #PlotlySubComponent,
 	#superclass : #RipaiscAbstractSubComponent,
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-subcomponents'
 }
 
 { #category : #rendering }
-PlotlySubcomponent >> updateRoot: aWARoot [
+PlotlySubComponent >> updateRoot: aWARoot [
 
 	super updateRoot: aWARoot.
 	aWARoot javascript url: 'https://cdn.plot.ly/plotly-2.4.2.min.js'

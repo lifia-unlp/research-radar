@@ -10,7 +10,7 @@ Class {
 		'selectedTopic',
 		'publicationsListSubcomponent'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #callbacks }

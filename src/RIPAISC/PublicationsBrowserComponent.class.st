@@ -5,7 +5,7 @@ Class {
 		'publicationsListSubComponent',
 		'hideDone'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #callbacks }

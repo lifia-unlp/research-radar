@@ -1,15 +1,15 @@
 Class {
-	#name : #CountryPlotSubcomponent,
-	#superclass : #PlotlySubcomponent,
+	#name : #CountryPlotSubComponent,
+	#superclass : #PlotlySubComponent,
 	#instVars : [
 		'publications',
 		'counts'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-subcomponents'
 }
 
 { #category : #'javascript-examples' }
-CountryPlotSubcomponent >> donutOn: script elementId: elementId [
+CountryPlotSubComponent >> donutOn: script elementId: elementId [
 
 	| plotly values labels |
 	plotly := script plotly: elementId.
@@ -28,7 +28,7 @@ CountryPlotSubcomponent >> donutOn: script elementId: elementId [
 ]
 
 { #category : #'javascript-examples' }
-CountryPlotSubcomponent >> publications: anObject [
+CountryPlotSubComponent >> publications: anObject [
 
 	| countsDictionary |
 	publications := anObject.
@@ -43,7 +43,7 @@ CountryPlotSubcomponent >> publications: anObject [
 ]
 
 { #category : #'javascript-examples' }
-CountryPlotSubcomponent >> renderContentOn: html [
+CountryPlotSubComponent >> renderContentOn: html [
 
 	html div
 		id: html nextId;

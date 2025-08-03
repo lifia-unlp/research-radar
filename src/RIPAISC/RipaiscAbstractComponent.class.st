@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'caller'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #accessing }

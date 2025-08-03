@@ -16,7 +16,7 @@ Class {
 		'urlColumn',
 		'typeMappings'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #accessing }

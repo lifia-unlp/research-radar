@@ -1,23 +1,23 @@
 Class {
-	#name : #YearlyEvolutionPlotSubcomponent,
-	#superclass : #PlotlySubcomponent,
+	#name : #YearlyEvolutionPlotSubComponent,
+	#superclass : #PlotlySubComponent,
 	#instVars : [
 		'groupByBlock',
 		'publications',
 		'collectionsOfNamedCounts',
 		'includeTotalCount'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-subcomponents'
 }
 
 { #category : #accessing }
-YearlyEvolutionPlotSubcomponent >> groupByBlock: anObject [
+YearlyEvolutionPlotSubComponent >> groupByBlock: anObject [
 
 	groupByBlock := anObject
 ]
 
 { #category : #initialization }
-YearlyEvolutionPlotSubcomponent >> initialize [
+YearlyEvolutionPlotSubComponent >> initialize [
 
 	super initialize.
 	groupByBlock := [ :each | Set with: '' ].
@@ -25,7 +25,7 @@ YearlyEvolutionPlotSubcomponent >> initialize [
 ]
 
 { #category : #rendering }
-YearlyEvolutionPlotSubcomponent >> plotlyTraceFor: titleToCollectionOfAssociations from: startYear to: endYear [
+YearlyEvolutionPlotSubComponent >> plotlyTraceFor: titleToCollectionOfAssociations from: startYear to: endYear [
 
 	| yearlyCounts counts title |
 	title := titleToCollectionOfAssociations key.
@@ -43,7 +43,7 @@ YearlyEvolutionPlotSubcomponent >> plotlyTraceFor: titleToCollectionOfAssociatio
 ]
 
 { #category : #accessing }
-YearlyEvolutionPlotSubcomponent >> publications: anObject [
+YearlyEvolutionPlotSubComponent >> publications: anObject [
 
 	publications := anObject.
 	collectionsOfNamedCounts := OrderedCollection new.
@@ -51,7 +51,7 @@ YearlyEvolutionPlotSubcomponent >> publications: anObject [
 ]
 
 { #category : #rendering }
-YearlyEvolutionPlotSubcomponent >> renderContentOn: html [
+YearlyEvolutionPlotSubComponent >> renderContentOn: html [
 
 	html div
 		id: html nextId;
@@ -63,7 +63,7 @@ YearlyEvolutionPlotSubcomponent >> renderContentOn: html [
 ]
 
 { #category : #rendering }
-YearlyEvolutionPlotSubcomponent >> setupScriptForScatterPlot: script elementId: elementId [
+YearlyEvolutionPlotSubComponent >> setupScriptForScatterPlot: script elementId: elementId [
 
 	| plotly traces years |
 	plotly := script plotly: elementId.
@@ -87,7 +87,7 @@ YearlyEvolutionPlotSubcomponent >> setupScriptForScatterPlot: script elementId: 
 ]
 
 { #category : #utility }
-YearlyEvolutionPlotSubcomponent >> updateCollectionOfNamedCounts [
+YearlyEvolutionPlotSubComponent >> updateCollectionOfNamedCounts [
 
 	| groups |
 	groups := publications flatCollectAsSet: groupByBlock.
@@ -99,16 +99,19 @@ YearlyEvolutionPlotSubcomponent >> updateCollectionOfNamedCounts [
 				                                         includes: group ].
 		                            group
 		                            -> (self yearlyCountsFor: selection) ].
-	collectionsOfNamedCounts add:
-		'Total' -> (self yearlyCountsFor: publications).
+
 	collectionsOfNamedCounts := collectionsOfNamedCounts
 		                            asSortedCollection: [ :a :b |
 		                            (a value sumNumbers: #value)
-		                            > (b value sumNumbers: #value) ]
+		                            > (b value sumNumbers: #value) ].
+	collectionsOfNamedCounts := collectionsOfNamedCounts
+		                            asOrderedCollection.
+	collectionsOfNamedCounts add:
+		'Total' -> (self yearlyCountsFor: publications)
 ]
 
 { #category : #utility }
-YearlyEvolutionPlotSubcomponent >> yearlyCountsFor: somePublications [
+YearlyEvolutionPlotSubComponent >> yearlyCountsFor: somePublications [
 
 	^ (somePublications
 		   collect: [ :each |

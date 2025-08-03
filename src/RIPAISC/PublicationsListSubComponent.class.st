@@ -4,10 +4,17 @@ Class {
 	#instVars : [
 		'publications',
 		'editingEnabled',
-		'showAbstracts'
+		'showAbstracts',
+		'taxonomySubComponent'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-subcomponents'
 }
+
+{ #category : #hooks }
+PublicationsListSubComponent >> children [
+
+	^ { taxonomySubComponent }
+]
 
 { #category : #rendering }
 PublicationsListSubComponent >> delete: each [ 
@@ -38,6 +45,7 @@ PublicationsListSubComponent >> initialize [
 	super initialize.
 	editingEnabled := false.
 	showAbstracts := false. 
+	taxonomySubComponent := TaxonomySubComponent new.
 ]
 
 { #category : #initialize }
@@ -70,9 +78,21 @@ PublicationsListSubComponent >> renderActionsFor: each on: html [
 { #category : #rendering }
 PublicationsListSubComponent >> renderContentOn: html [
 
-	publications do: [ :each |
-		html paragraph: [ self renderPublication: each on: html ] ].
-
+	| publicationsByYear |
+	publicationsByYear := (publications groupedBy: [ :each | each year ])
+		                      associations asSortedCollection: [ :a :b |
+		                      a key > b key ].
+	publicationsByYear do: [ :ass |
+		html heading
+			level: 3;
+			with:
+				ass key greaseString , ' (' , ass value size greaseString , ')'.
+		taxonomySubComponent
+			beBriefWithTaxonomy: self radar topicsTaxonomy
+			and: ass value.
+		html render: taxonomySubComponent.
+		ass value do: [ :publication |
+			html paragraph: [ self renderPublication: publication on: html ] ] ]
 ]
 
 { #category : #rendering }

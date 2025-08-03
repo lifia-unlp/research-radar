@@ -1,17 +1,17 @@
 Class {
-	#name : #TaxonomyPlotSubcomponent,
-	#superclass : #PlotlySubcomponent,
+	#name : #TaxonomyPlotSubComponent,
+	#superclass : #PlotlySubComponent,
 	#instVars : [
 		'publications',
 		'taxonomy',
 		'aspect',
 		'countsDictionary'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-subcomponents'
 }
 
 { #category : #accessing }
-TaxonomyPlotSubcomponent >> publications: aCollectionOfPublications taxonomy: aTaxonomy aspect: anAspect [
+TaxonomyPlotSubComponent >> publications: aCollectionOfPublications taxonomy: aTaxonomy aspect: anAspect [
 
 	publications := aCollectionOfPublications.
 	aspect := anAspect.
@@ -22,7 +22,7 @@ TaxonomyPlotSubcomponent >> publications: aCollectionOfPublications taxonomy: aT
 ]
 
 { #category : #rendering }
-TaxonomyPlotSubcomponent >> renderContentOn: html [
+TaxonomyPlotSubComponent >> renderContentOn: html [
 
 	html unorderedList: [
 		taxonomy subtopics do: [ :each |
@@ -30,7 +30,7 @@ TaxonomyPlotSubcomponent >> renderContentOn: html [
 ]
 
 { #category : #rendering }
-TaxonomyPlotSubcomponent >> renderTaxonomyTopic: aTopic on: html [
+TaxonomyPlotSubComponent >> renderTaxonomyTopic: aTopic on: html [
 
 	| count text |
 	count := countsDictionary at: aTopic value ifAbsent: [ 0 ].

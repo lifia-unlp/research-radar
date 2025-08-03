@@ -2,25 +2,28 @@ Class {
 	#name : #RadarViewComponent,
 	#superclass : #RipaiscAbstractComponent,
 	#instVars : [
-		'yearlyEvolutionPlotSubcomponent',
-		'topicsTaxonomyPlotSubcomponent',
 		'applicationDomainsTaxonomyPlotSubcomponent',
-		'countryPlotSubcomponent',
 		'selectedTab',
 		'publications',
-		'publicationsListSubcomponent'
+		'countryPlotSubComponent',
+		'publicationsListSubComponent',
+		'topicsTaxonomyPlotSubComponent',
+		'yearlyEvolutionPlotSubComponent',
+		'taxonomySubcomponent'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #hooks }
 RadarViewComponent >> children [
 
 	^ {
-		  yearlyEvolutionPlotSubcomponent.
-		  topicsTaxonomyPlotSubcomponent.
+		  yearlyEvolutionPlotSubComponent.
+		  topicsTaxonomyPlotSubComponent.
 		  applicationDomainsTaxonomyPlotSubcomponent.
-		  countryPlotSubcomponent . publicationsListSubcomponent }
+		  countryPlotSubComponent.
+		  publicationsListSubComponent.
+		  taxonomySubcomponent }
 ]
 
 { #category : #initialization }
@@ -28,26 +31,26 @@ RadarViewComponent >> initialize [
 
 	super initialize.
 	self selectLatinamerica.
-	yearlyEvolutionPlotSubcomponent := YearlyEvolutionPlotSubcomponent
+	yearlyEvolutionPlotSubComponent := YearlyEvolutionPlotSubComponent
 		                                   new
 		                                   parent: self;
-		groupByBlock: [ :each | each countries ]
-		                                   yourself.
-	topicsTaxonomyPlotSubcomponent := TaxonomyPlotSubcomponent new
+		                                   groupByBlock:
+			                                   [ :each | each countries ]
+				                                   yourself.
+	topicsTaxonomyPlotSubComponent := TaxonomyPlotSubComponent new
 		                                  parent: self;
 		                                  yourself.
-
-	applicationDomainsTaxonomyPlotSubcomponent := TaxonomyPlotSubcomponent
+	applicationDomainsTaxonomyPlotSubcomponent := TaxonomyPlotSubComponent
 		                                              new
 		                                              parent: self;
 		                                              yourself.
-
-	countryPlotSubcomponent := CountryPlotSubcomponent new
+	countryPlotSubComponent := CountryPlotSubComponent new
 		                           parent: self;
 		                           yourself.
-	publicationsListSubcomponent := PublicationsListSubComponent new
+	publicationsListSubComponent := PublicationsListSubComponent new
 		                                parent: self;
-		                                yourself
+		                                yourself.
+	taxonomySubcomponent := TaxonomySubComponent new
 ]
 
 { #category : #hooks }
@@ -55,6 +58,15 @@ RadarViewComponent >> publishedCountries [
 
 	^ (self radar publications flatCollectAsSet: [ :each |
 		   each countries ]) asSortedCollection
+]
+
+{ #category : #rendering }
+RadarViewComponent >> renderBriefTaxonomyOn: html [
+
+	taxonomySubcomponent
+		beBriefWithTaxonomy: self radar topicsTaxonomy
+		and: publications.
+	html render: taxonomySubcomponent
 ]
 
 { #category : #rendering }
@@ -70,6 +82,15 @@ RadarViewComponent >> renderContentOn: html [
 ]
 
 { #category : #rendering }
+RadarViewComponent >> renderFullTaxonomyOn: html [
+
+	taxonomySubcomponent
+		beFullWithTaxonomy: self radar topicsTaxonomy
+		and: publications.
+	html render: taxonomySubcomponent
+]
+
+{ #category : #rendering }
 RadarViewComponent >> renderGeneralOverviewOn: html [
 
 	html heading: selectedTab.
@@ -80,24 +101,24 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 		html
 			column: [
 				html strong: 'Publications by country'.
-				countryPlotSubcomponent publications: publications.
-				html render: countryPlotSubcomponent ]
+				countryPlotSubComponent publications: publications.
+				html render: countryPlotSubComponent ]
 			mediumSize: 6.
 		html
 			column: [
 				html strong: 'Evolution of publications'.
-				yearlyEvolutionPlotSubcomponent publications: publications.
-				html render: yearlyEvolutionPlotSubcomponent ]
+				yearlyEvolutionPlotSubComponent publications: publications.
+				html render: yearlyEvolutionPlotSubComponent ]
 			mediumSize: 6 ].
 	^ html row: [
 		  html
 			  column: [
 				  html strong: 'Publications by topic'.
-				  topicsTaxonomyPlotSubcomponent
+				  topicsTaxonomyPlotSubComponent
 					  publications: publications
 					  taxonomy: self radar topicsTaxonomy
 					  aspect: #topics.
-				  html render: topicsTaxonomyPlotSubcomponent ]
+				  html render: topicsTaxonomyPlotSubComponent ]
 			  mediumSize: 6.
 		  html
 			  column: [
@@ -108,21 +129,6 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 					  aspect: #applicationDomains.
 				  html render: applicationDomainsTaxonomyPlotSubcomponent ]
 			  mediumSize: 6 ]
-]
-
-{ #category : #rendering }
-RadarViewComponent >> renderHierarchicalTopicFrequencyOn: html [
-
-	| counts |
-	counts := (self radar topicsTaxonomy subtopics collect: [ :each |
-		           TopicProductCount topic: each publications: publications ])
-		          asSortedCollection: [ :a :b |
-		          a familyCount > b familyCount ].
-
-	html paragraph: [
-		html text: (counts collect: [ :each |
-				 each topic label , ' (' , each familyCount greaseString , ')' ])
-				asCommaStringAnd ]
 ]
 
 { #category : #hooks }
@@ -173,37 +179,11 @@ RadarViewComponent >> renderOverviewForSelectedCountryOn: html [
 
 	html heading: selectedTab.
 	self renderTotalCountOn: html.
-	self renderHierarchicalTopicFrequencyOn: html.
-	self renderTopicFrequencyOn: html.
-	publicationsListSubcomponent publications: publications.
-	html render: publicationsListSubcomponent
-]
-
-{ #category : #rendering }
-RadarViewComponent >> renderTopicFrequencyOn: html [
-
-	| counts organizedTopics |
-	organizedTopics := self radar topicsTaxonomy withSubtopics.
-	organizedTopics remove: self radar topicsTaxonomy.
-
-	counts := organizedTopics collect: [ :each |
-		          TopicProductCount topic: each publications: publications ].
-
-	html paragraph: [
-		counts
-			do: [ :each |
-				| text elem |
-				text := each topic label , '(' , each ownCount greaseString , '/'
-				        , each familyCount greaseString , ')'.
-				elem := html span.
-				each familyCount = 0
-					ifTrue: [ elem class: 'tagcloud-light' ]
-					ifFalse: [
-						each familyCount <= 5
-							ifTrue: [ elem class: 'tagcloud-medium' ]
-							ifFalse: [ elem class: 'tagcloud-dark' ] ].
-				elem with: each topic label ]
-			separatedBy: [ html text: ', ' ] ]
+	self renderBriefTaxonomyOn: html.
+	self renderFullTaxonomyOn: html.
+	publicationsListSubComponent publications: publications.
+	"MAke publications be grouped by year, with a simple topic cloud in front of it"
+	html render: publicationsListSubComponent
 ]
 
 { #category : #rendering }
@@ -236,20 +216,4 @@ RadarViewComponent >> selectRipaisc [
 	self selectCountry: 'RIPAISC'.
 	publications := self radar publications select: [ :each |
 		                each byRipaisc ]
-]
-
-{ #category : #callbacks }
-RadarViewComponent >> style [
-
-	^ '.tagcloud-light {
-  color: #d0dcf2; 
-}
-
-.tagcloud-medium {
-  color: #97c0f4; 
-}
-
-.tagcloud-dark {
-  color: #073b92; 
-}'
 ]

@@ -1,7 +1,7 @@
 Class {
 	#name : #LandingComponent,
 	#superclass : #RipaiscAbstractComponent,
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #rendering }

@@ -10,7 +10,7 @@ Class {
 	#instVars : [
 		'parent'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-subcomponents'
 }
 
 { #category : #accessing }

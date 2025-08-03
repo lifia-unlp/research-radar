@@ -17,7 +17,7 @@ Class {
 		'topicsWithLevels',
 		'relevanceToQse'
 	],
-	#category : #'RIPAISC-seaside'
+	#category : #'RIPAISC-seaside-components'
 }
 
 { #category : #accessing }
