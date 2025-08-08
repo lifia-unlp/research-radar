@@ -57,6 +57,11 @@ Radar class >> save: aRadar on: aFilename [
 
 	| file |
 	file := FileLocator workingDirectory / (aFilename , '.fuel').
+	FLSerializer serialize: aRadar toFileNamed: file fullName.
+	file := FileLocator workingDirectory
+	        /
+	        (aFilename , '-' , Date today ddmmyyyy asValidSelector
+	         , '.fuel').
 	FLSerializer serialize: aRadar toFileNamed: file fullName
 ]
 
