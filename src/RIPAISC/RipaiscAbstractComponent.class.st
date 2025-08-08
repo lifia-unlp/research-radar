@@ -39,15 +39,9 @@ RipaiscAbstractComponent >> rendererClass [
 ]
 
 { #category : #'save-restore' }
-RipaiscAbstractComponent >> repositoryFilename [
-
-	^ 'ripaisc-radar'
-]
-
-{ #category : #'save-restore' }
 RipaiscAbstractComponent >> save [
 
-	Radar save: self radar on: self repositoryFilename
+	Radar save
 ]
 
 { #category : #updating }

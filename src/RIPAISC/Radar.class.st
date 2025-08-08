@@ -17,26 +17,57 @@ Class {
 }
 
 { #category : #accessing }
+Radar class >> monitor [
+
+	^ monitor ifNil: [ monitor := Monitor new ]
+]
+
+{ #category : #accessing }
+Radar class >> readFrom: aFilename [
+
+	| file |
+	file := FileLocator workingDirectory / (aFilename , '.fuel').
+	file exists ifFalse: [ ^ singleton := nil ].
+	singleton := FLMaterializer new
+		             filePath: file fullName;
+		             materializeRoot
+]
+
+{ #category : #accessing }
+Radar class >> repositoryFilename [
+
+	^ 'ripaisc-radar'
+]
+
+{ #category : #accessing }
 Radar class >> resetSingleton [
 
 	 singleton := nil.
 ]
 
 { #category : #accessing }
+Radar class >> save [
+
+	self monitor critical: [
+		self save: self singleton on: self repositoryFilename ]
+]
+
+{ #category : #accessing }
 Radar class >> save: aRadar on: aFilename [
 
 	| file |
-	monitor critical: [
-		file := FileLocator workingDirectory / (aFilename , '.fuel').
-		FLSerializer serialize: aRadar toFileNamed: file fullName ]
+	file := FileLocator workingDirectory / (aFilename , '.fuel').
+	FLSerializer serialize: aRadar toFileNamed: file fullName
 ]
 
 { #category : #accessing }
 Radar class >> singleton [
 
 	^ singleton ifNil: [
-		  monitor := Monitor new.
-		  singleton := self new. ]
+
+		  self monitor critical: [
+			  self readFrom: self repositoryFilename.
+			  singleton ifNil: [ singleton := self new ] ] ]
 ]
 
 { #category : #accessing }
