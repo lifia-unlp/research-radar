@@ -11,10 +11,12 @@ debug ifFalse: [
 
 ZnZincServerAdaptor startOn: 8080.
 
-applications add: (WAAdmin
+apps := OrderedCollection new. 
+
+apps add: (WAAdmin
 	register: RadarViewComponent 
 	asApplicationAt: 'research-radar').
-applications add: (WAAdmin
+apps add: (WAAdmin
 	register: PrivateHomeComponent
 	asApplicationAt: 'research-radar-admin').
 
