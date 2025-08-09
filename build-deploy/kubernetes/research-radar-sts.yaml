@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: research-radar 
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: research-radar
+  serviceName: research-radar
+  template:
+    metadata:      
+      labels:
+        app: research-radar
+    spec:
+      containers:
+        - image: 'cientopolis/research-radar:latest'
+          imagePullPolicy: Always          
+          name: research-radar
+          env:
+            - name: DEBUG
+              value: false
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/pharo/data
+              name: research-radar
+  volumeClaimTemplates:
+    - metadata:        
+        name: research-radar
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi

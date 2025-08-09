@@ -1,0 +1,14 @@
+version: "3.9"  
+services:
+  web:
+    image: cientopolis/research-radar:latest
+    read_only: true
+    restart: unless-stopped
+    ports:
+        - "8080:8080"
+    environment: 
+      DEBUG: true
+    volumes:
+        - type: bind
+          source: ./data
+          target: /opt/pharo/data

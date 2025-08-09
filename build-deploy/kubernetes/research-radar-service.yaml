@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:  
+  name: research-radar
+spec:
+  ports:    
+    - name: research-radar
+      protocol: TCP
+      port: 8080
+      targetPort: 8080    
+  selector:
+    app: research-radar
+
