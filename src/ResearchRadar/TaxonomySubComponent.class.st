@@ -1,12 +1,12 @@
 Class {
 	#name : #TaxonomySubComponent,
-	#superclass : #RipaiscAbstractSubComponent,
+	#superclass : #RadarAbstractSubComponent,
 	#instVars : [
 		'style',
 		'taxonomy',
 		'publications'
 	],
-	#category : #'RIPAISC-seaside-subcomponents'
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #rendering }

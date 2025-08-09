@@ -1,14 +1,14 @@
 Class {
-	#name : #RipaiscAbstractComponent,
+	#name : #RadarAbstractComponent,
 	#superclass : #WAComponent,
 	#instVars : [
 		'caller'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #accessing }
-RipaiscAbstractComponent class >> caller: aComponent [
+RadarAbstractComponent class >> caller: aComponent [
 
 	^ self new
 		  caller: aComponent;
@@ -16,36 +16,36 @@ RipaiscAbstractComponent class >> caller: aComponent [
 ]
 
 { #category : #accessing }
-RipaiscAbstractComponent >> caller [
+RadarAbstractComponent >> caller [
 
 	^ caller
 ]
 
 { #category : #accessing }
-RipaiscAbstractComponent >> caller: anObject [
+RadarAbstractComponent >> caller: anObject [
 
 	caller := anObject
 ]
 
 { #category : #'save-restore' }
-RipaiscAbstractComponent >> radar [
+RadarAbstractComponent >> radar [
 
  ^ Radar singleton. 
 ]
 
 { #category : #updating }
-RipaiscAbstractComponent >> rendererClass [
+RadarAbstractComponent >> rendererClass [
 	^ SBSHtmlCanvas
 ]
 
 { #category : #'save-restore' }
-RipaiscAbstractComponent >> save [
+RadarAbstractComponent >> save [
 
 	Radar save
 ]
 
 { #category : #updating }
-RipaiscAbstractComponent >> updateRoot: aWARoot [
+RadarAbstractComponent >> updateRoot: aWARoot [
 	super updateRoot: aWARoot.
 	aWARoot
 		beHtml5;

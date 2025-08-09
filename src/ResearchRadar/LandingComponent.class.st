@@ -1,7 +1,7 @@
 Class {
 	#name : #LandingComponent,
-	#superclass : #RipaiscAbstractComponent,
-	#category : #'RIPAISC-seaside-components'
+	#superclass : #RadarAbstractComponent,
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #rendering }

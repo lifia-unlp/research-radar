@@ -7,7 +7,7 @@ Class {
 		'aspect',
 		'countsDictionary'
 	],
-	#category : #'RIPAISC-seaside-subcomponents'
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #accessing }

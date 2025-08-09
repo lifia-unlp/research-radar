@@ -1,6 +1,6 @@
 Class {
 	#name : #RadarViewComponent,
-	#superclass : #RipaiscAbstractComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'applicationDomainsTaxonomyPlotSubcomponent',
 		'selectedTab',
@@ -11,7 +11,7 @@ Class {
 		'yearlyEvolutionPlotSubComponent',
 		'taxonomySubcomponent'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #hooks }

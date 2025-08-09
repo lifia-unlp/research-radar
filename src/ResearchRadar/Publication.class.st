@@ -11,7 +11,7 @@ Class {
 		'countries',
 		'relevanceToQse'
 	],
-	#category : #'RIPAISC-model'
+	#category : #'ResearchRadar-model'
 }
 
 { #category : #accessing }

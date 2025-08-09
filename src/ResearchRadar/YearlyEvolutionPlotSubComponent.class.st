@@ -7,7 +7,7 @@ Class {
 		'collectionsOfNamedCounts',
 		'includeTotalCount'
 	],
-	#category : #'RIPAISC-seaside-subcomponents'
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #accessing }

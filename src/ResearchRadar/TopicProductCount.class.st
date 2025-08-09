@@ -6,7 +6,7 @@ Class {
 		'ownCount',
 		'familyCount'
 	],
-	#category : #'RIPAISC-model'
+	#category : #'ResearchRadar-model'
 }
 
 { #category : #initialization }

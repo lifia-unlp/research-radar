@@ -1,6 +1,6 @@
 Class {
 	#name : #TaxonomyBrowserComponent,
-	#superclass : #RipaiscAbstractComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'taxonomy',
 		'publicationsRetrievingBlock',
@@ -10,7 +10,7 @@ Class {
 		'selectedTopic',
 		'publicationsListSubcomponent'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #callbacks }

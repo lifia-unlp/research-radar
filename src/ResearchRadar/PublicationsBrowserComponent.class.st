@@ -1,11 +1,11 @@
 Class {
 	#name : #PublicationsBrowserComponent,
-	#superclass : #RipaiscAbstractComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'publicationsListSubComponent',
 		'hideDone'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #callbacks }

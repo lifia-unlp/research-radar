@@ -1,10 +1,10 @@
 Class {
 	#name : #PrivateHomeComponent,
-	#superclass : #RipaiscAbstractComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'secret'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #rendering }

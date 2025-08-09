@@ -5,7 +5,7 @@ Class {
 		'publications',
 		'counts'
 	],
-	#category : #'RIPAISC-seaside-subcomponents'
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #'javascript-examples' }

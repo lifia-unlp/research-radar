@@ -1,11 +1,11 @@
 Class {
-	#name : #BaselineOfRIPAISC,
+	#name : #BaselineOfResearchRadar,
 	#superclass : #BaselineOf,
-	#category : #BaselineOfRIPAISC
+	#category : #BaselineOfResearchRadar
 }
 
 { #category : #baselines }
-BaselineOfRIPAISC >> baseline: spec [
+BaselineOfResearchRadar >> baseline: spec [
 	<baseline>
 	spec
 		for: #common
@@ -17,7 +17,7 @@ BaselineOfRIPAISC >> baseline: spec [
 				neoCSV: spec;
 				plotly: spec.
 			spec
-				package: 'RIPAISC'
+				package: 'ResearchRadar'
 				with: [ spec
 						requires:
 							#('Seaside3' 'Bootstrap5'  'Seaside-Plotly-Core' ) ] ].
@@ -25,7 +25,7 @@ BaselineOfRIPAISC >> baseline: spec [
 ]
 
 { #category : #baselines }
-BaselineOfRIPAISC >> bootstrap5: spec [
+BaselineOfResearchRadar >> bootstrap5: spec [
 	spec
 		baseline: 'Bootstrap5'
 		with: [ spec repository: 'github://astares/Seaside-Bootstrap5:master/src' ].
@@ -34,28 +34,28 @@ BaselineOfRIPAISC >> bootstrap5: spec [
 ]
 
 { #category : #baselines }
-BaselineOfRIPAISC >> doi: spec [
+BaselineOfResearchRadar >> doi: spec [
 	spec
 		package: 'DOI'
 		with: [ spec repository: 'github://cientopolis/petitbibtex' ]
 ]
 
 { #category : #baselines }
-BaselineOfRIPAISC >> neoCSV: spec [
+BaselineOfResearchRadar >> neoCSV: spec [
 	spec
 		baseline: 'NeoCSV'
 		with: [ spec repository: 'github://svenvc/NeoCSV/repository' ]
 ]
 
 { #category : #baselines }
-BaselineOfRIPAISC >> petitBibtex: spec [
+BaselineOfResearchRadar >> petitBibtex: spec [
 	spec
 		baseline: 'PetitBibtex'
 		with: [ spec repository: 'github://cientopolis/petitbibtex' ]
 ]
 
 { #category : #baselines }
-BaselineOfRIPAISC >> plotly: spec [
+BaselineOfResearchRadar >> plotly: spec [
 	spec
 		package: 'Seaside-Plotly-Core'
 		with: [ spec repository: 'github://emaringolo/seaside-plotlyjs/src' ].
@@ -63,7 +63,7 @@ BaselineOfRIPAISC >> plotly: spec [
 ]
 
 { #category : #baselines }
-BaselineOfRIPAISC >> seaside: spec [
+BaselineOfResearchRadar >> seaside: spec [
 	spec
 		baseline: 'Seaside3'
 		with: [ spec repository: 'github://SeasideSt/Seaside:master/repository' ].

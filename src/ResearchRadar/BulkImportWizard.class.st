@@ -1,6 +1,6 @@
 Class {
 	#name : #BulkImportWizard,
-	#superclass : #RipaiscAbstractComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'dataRows',
 		'bibtexEntriesFromFile',
@@ -16,7 +16,7 @@ Class {
 		'urlColumn',
 		'typeMappings'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #accessing }

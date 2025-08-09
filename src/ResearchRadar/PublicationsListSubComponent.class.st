@@ -1,13 +1,13 @@
 Class {
 	#name : #PublicationsListSubComponent,
-	#superclass : #RipaiscAbstractSubComponent,
+	#superclass : #RadarAbstractSubComponent,
 	#instVars : [
 		'publications',
 		'editingEnabled',
 		'showAbstracts',
 		'taxonomySubComponent'
 	],
-	#category : #'RIPAISC-seaside-subcomponents'
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #hooks }

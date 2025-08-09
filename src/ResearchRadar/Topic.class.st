@@ -6,7 +6,7 @@ Class {
 		'description',
 		'subtopics'
 	],
-	#category : #'RIPAISC-model'
+	#category : #'ResearchRadar-model'
 }
 
 { #category : #constants }

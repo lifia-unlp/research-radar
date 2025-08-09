@@ -5,22 +5,22 @@ They do not offer a return button or link
 
 "
 Class {
-	#name : #RipaiscAbstractSubComponent,
-	#superclass : #RipaiscAbstractComponent,
+	#name : #RadarAbstractSubComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'parent'
 	],
-	#category : #'RIPAISC-seaside-subcomponents'
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #accessing }
-RipaiscAbstractSubComponent >> parent [
+RadarAbstractSubComponent >> parent [
 
 	^ parent
 ]
 
 { #category : #accessing }
-RipaiscAbstractSubComponent >> parent: anObject [
+RadarAbstractSubComponent >> parent: anObject [
 
 	parent := anObject
 ]

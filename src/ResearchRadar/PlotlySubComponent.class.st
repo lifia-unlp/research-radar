@@ -1,7 +1,7 @@
 Class {
 	#name : #PlotlySubComponent,
-	#superclass : #RipaiscAbstractSubComponent,
-	#category : #'RIPAISC-seaside-subcomponents'
+	#superclass : #RadarAbstractSubComponent,
+	#category : #'ResearchRadar-seaside-subcomponents'
 }
 
 { #category : #rendering }

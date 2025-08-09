@@ -13,7 +13,7 @@ Class {
 		'singleton',
 		'monitor'
 	],
-	#category : #'RIPAISC-persistence'
+	#category : #'ResearchRadar-persistence'
 }
 
 { #category : #secrets }

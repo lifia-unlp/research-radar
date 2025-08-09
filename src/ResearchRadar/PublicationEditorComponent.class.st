@@ -1,6 +1,6 @@
 Class {
 	#name : #PublicationEditorComponent,
-	#superclass : #RipaiscAbstractComponent,
+	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'publication',
 		'title',
@@ -17,7 +17,7 @@ Class {
 		'topicsWithLevels',
 		'relevanceToQse'
 	],
-	#category : #'RIPAISC-seaside-components'
+	#category : #'ResearchRadar-seaside-components'
 }
 
 { #category : #accessing }
