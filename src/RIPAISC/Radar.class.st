@@ -52,7 +52,7 @@ Radar class >> readFrom: aFilename [
 { #category : #accessing }
 Radar class >> repositoryFilename [
 
-	^ 'ripaisc-radar'
+	^ 'research-radar'
 ]
 
 { #category : #accessing }
