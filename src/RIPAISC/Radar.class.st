@@ -16,6 +16,22 @@ Class {
 	#category : #'RIPAISC-persistence'
 }
 
+{ #category : #secrets }
+Radar class >> knownSecret [
+
+	'secret.txt' asFileReference ifExists: [ :it |
+		^ it readStreamDo: [ :stream | stream contents ] ].
+	^ nil
+]
+
+{ #category : #secrets }
+Radar class >> knownSecret: aString [
+
+	| fileReference |
+	fileReference := 'secret.txt' asFileReference .
+	fileReference writeStreamDo: [ :stream | stream nextPutAll: aString ]
+]
+
 { #category : #accessing }
 Radar class >> monitor [
 

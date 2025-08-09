@@ -1,6 +1,9 @@
 Class {
 	#name : #PrivateHomeComponent,
 	#superclass : #RipaiscAbstractComponent,
+	#instVars : [
+		'secret'
+	],
 	#category : #'RIPAISC-seaside-components'
 }
 
@@ -8,10 +11,13 @@ Class {
 PrivateHomeComponent >> renderContentOn: html [
 
 	html container: [
-		self renderLinkToPublicationsOn: html.
-		self renderLinkToTopicsTaxonomyOn: html.
-		self renderLinkToApplicationDomainsTaxonomyOn: html.
-		self renderLinkToUploadFileOn: html ]
+		secret = Radar knownSecret
+			ifTrue: [
+				self renderLinkToPublicationsOn: html.
+				self renderLinkToTopicsTaxonomyOn: html.
+				self renderLinkToApplicationDomainsTaxonomyOn: html.
+				self renderLinkToUploadFileOn: html ]
+			ifFalse: [ self renderRequestForSecretOn: html ] ]
 ]
 
 { #category : #rendering }
@@ -62,4 +68,26 @@ PrivateHomeComponent >> renderLinkToUploadFileOn: html [
 							 caller: self;
 							 yourself) ];
 			with: 'Upload' ]
+]
+
+{ #category : #rendering }
+PrivateHomeComponent >> renderRequestForSecretOn: html [
+
+	html form: [
+		html formGroup: [
+			html label: 'What''s your secret?'.
+			html textInput formControl on: #secret of: self ] ]
+]
+
+{ #category : #accessing }
+PrivateHomeComponent >> secret [
+
+	^ secret
+]
+
+{ #category : #accessing }
+PrivateHomeComponent >> secret: aString [
+
+	secret := aString.
+	Radar knownSecret ifNil: [ Radar knownSecret: aString ]
 ]
