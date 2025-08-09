@@ -19,7 +19,7 @@ Class {
 { #category : #secrets }
 Radar class >> knownSecret [
 
-	'secret.txt' asFileReference ifExists: [ :it |
+	self secretFile ifExists: [ :it |
 		^ it readStreamDo: [ :stream | stream contents ] ].
 	^ nil
 ]
@@ -27,9 +27,8 @@ Radar class >> knownSecret [
 { #category : #secrets }
 Radar class >> knownSecret: aString [
 
-	| fileReference |
-	fileReference := 'secret.txt' asFileReference .
-	fileReference writeStreamDo: [ :stream | stream nextPutAll: aString ]
+	self secretFile writeStreamDo: [ :stream |
+		stream nextPutAll: aString ]
 ]
 
 { #category : #accessing }
@@ -39,20 +38,24 @@ Radar class >> monitor [
 ]
 
 { #category : #accessing }
-Radar class >> readFrom: aFilename [
+Radar class >> readFrom: aFileReference [
 
-	| file |
-	file := FileLocator workingDirectory / (aFilename , '.fuel').
-	file exists ifFalse: [ ^ singleton := nil ].
+	aFileReference exists ifFalse: [ ^ singleton := nil ].
 	singleton := FLMaterializer new
-		             filePath: file fullName;
+		             filePath: aFileReference fullName;
 		             materializeRoot
 ]
 
 { #category : #accessing }
-Radar class >> repositoryFilename [
+Radar class >> repositoryFile [
 
-	^ 'research-radar'
+	^ self repositoryFolder / 'research-radar.fuel'
+]
+
+{ #category : #accessing }
+Radar class >> repositoryFolder [
+
+	^ FileLocator workingDirectory / 'data'
 ]
 
 { #category : #accessing }
@@ -65,20 +68,24 @@ Radar class >> resetSingleton [
 Radar class >> save [
 
 	self monitor critical: [
-		self save: self singleton on: self repositoryFilename ]
+		self save: self singleton on: self repositoryFile ]
 ]
 
 { #category : #accessing }
-Radar class >> save: aRadar on: aFilename [
+Radar class >> save: aRadar on: aFileReference [
 
-	| file |
-	file := FileLocator workingDirectory / (aFilename , '.fuel').
-	FLSerializer serialize: aRadar toFileNamed: file fullName.
-	file := FileLocator workingDirectory
-	        /
-	        (aFilename , '-' , Date today ddmmyyyy asValidSelector
-	         , '.fuel').
-	FLSerializer serialize: aRadar toFileNamed: file fullName
+	FLSerializer serialize: aRadar toFileNamed: aFileReference fullName.
+	FLSerializer
+		serialize: aRadar
+		toFileNamed:
+		aFileReference fullName
+		, ('-' , Date today ddmmyyyy asValidSelector)
+]
+
+{ #category : #accessing }
+Radar class >> secretFile [
+
+	^ self repositoryFolder / 'secret.txt'
 ]
 
 { #category : #accessing }
@@ -87,7 +94,7 @@ Radar class >> singleton [
 	^ singleton ifNil: [
 
 		  self monitor critical: [
-			  self readFrom: self repositoryFilename.
+			  self readFrom: self repositoryFile.
 			  singleton ifNil: [ singleton := self new ] ] ]
 ]
 
