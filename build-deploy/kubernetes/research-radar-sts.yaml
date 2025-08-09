@@ -20,7 +20,7 @@ spec:
           name: research-radar
           env:
             - name: DEBUG
-              value: false
+              value: "false"
           ports:
             - containerPort: 8080
               protocol: TCP
