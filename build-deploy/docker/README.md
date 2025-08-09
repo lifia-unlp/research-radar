@@ -1,7 +1,7 @@
 # To build and deploy to the public Docker repository
 
 ````
-docker build --no-cache -t research-radar:current .
+docker build --no-cache --platform=linux/amd64 -t research-radar:current .
 
 docker tag research-radar:current cientopolis/research-radar:latest
 
