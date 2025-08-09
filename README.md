@@ -1,5 +1,6 @@
-# Radar RIPAISC
-Monitor de publicaciones de QSE en Latinoamerica en especial de aquellas generadas por RIPAISC.net
+# Radar de Investigacion
+
+Monitor de publicaciones con organizador taxonómico y regional
 
 # Para desarrolladores
 
