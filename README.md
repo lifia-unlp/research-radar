@@ -5,8 +5,8 @@ Monitor de publicaciones de QSE en Latinoamerica en especial de aquellas generad
 
 ```
 Metacello new
-   baseline: 'RIPAISC';
-   repository: 'github://lifia-unlp/ripaisc-radar:main';
+   baseline: 'ResearchRadar';
+   repository: 'github://lifia-unlp/research-radar:main';
    onConflictUseLoaded;
    onWarningLog; 
    load.
