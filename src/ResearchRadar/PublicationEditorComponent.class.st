@@ -11,11 +11,11 @@ Class {
 		'year',
 		'doi',
 		'countries',
-		'producedByRipaisc',
 		'bibtexEntry',
 		'applicationDomainsWithLevels',
 		'topicsWithLevels',
-		'relevanceToQse'
+		'producedByNetwork',
+		'relevanceToTopic'
 	],
 	#category : #'ResearchRadar-seaside-components'
 }
@@ -48,8 +48,8 @@ PublicationEditorComponent >> accept [
 		countries: countries;
 		topics: (topicsWithLevels collect: #value);
 		applicationDomains: (applicationDomainsWithLevels collect: #value);
-		relevanceToQse: relevanceToQse ;
-		byRipaisc: producedByRipaisc.
+		relevanceToTopic: relevanceToTopic ;
+		byNetwork: producedByNetwork.
 	self answer: publication
 ]
 
@@ -140,18 +140,6 @@ PublicationEditorComponent >> fetchBibtex [
 ]
 
 { #category : #accessing }
-PublicationEditorComponent >> producedByRipaisc [
-
-	^ producedByRipaisc
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> producedByRipaisc: anObject [
-
-	producedByRipaisc := anObject
-]
-
-{ #category : #accessing }
 PublicationEditorComponent >> publication [
 
 	^ publication
@@ -167,10 +155,10 @@ PublicationEditorComponent >> publication: anObject [
 	doi := publication doi.
 	url := publication url.
 	authors := publication author.
-	producedByRipaisc := publication byRipaisc.
+	producedByNetwork := publication byNetwork.
 	selfArchivingUrl := publication selfArchivingUrl.
 	countries := publication countries.
-	relevanceToQse := publication relevanceToQse .
+	relevanceToTopic := publication relevanceToTopic .
 	topicsWithLevels := self
 		                    choose: publication topics
 		                    fromElementsWithLevelsIn:
@@ -181,18 +169,6 @@ PublicationEditorComponent >> publication: anObject [
 		                                fromElementsWithLevelsIn:
 		                                self applicationDomainsToChooseFrom.
 	bibtexEntry := publication bibtexEntry
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> relevanceToQse [
-
-	^ relevanceToQse
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> relevanceToQse: anObject [
-
-	relevanceToQse := anObject
 ]
 
 { #category : #rendering }
@@ -222,7 +198,7 @@ PublicationEditorComponent >> renderContentOn: html [
 				html textInput formControl on: #year of: self ].
 
 			html formGroup: [
-				html label: 'Autores'.
+				html label: 'Authors'.
 				html textInput formControl on: #authors of: self ].
 
 			html formGroup
@@ -230,8 +206,8 @@ PublicationEditorComponent >> renderContentOn: html [
 				with: [
 					html formCheckLabel with: [
 							html formCheckbox
-								on: #producedByRipaisc of: self;
-								with: 'Algun autor pertenece a RIPAISC?' ] ].
+								on: #producedByNetwork of: self;
+								with: 'Any author belongs to the network?' ] ].
 
 			html formGroup: [
 				html label: 'Abstract'.
@@ -274,9 +250,9 @@ PublicationEditorComponent >> renderContentOn: html [
 
 
 			html formGroup: [
-				html label: 'Relevance to QSE'.
+				html label: 'Relevance to the topic'.
 				html formSelect
-					on: #relevanceToQse of: self;
+					on: #relevanceToTopic of: self;
 					list: self valuesForRelevanceToQse ].
 
 			html formGroup: [

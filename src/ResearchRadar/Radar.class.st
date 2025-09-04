@@ -63,8 +63,8 @@ Radar class >> propertiesDefault [
 		  at: 'project' put: 'Research Radar';
 		  at: 'description' put: 'Monitoring regional research';
 		  at: 'ulr' put: 'https://github.com/lifia-unlp/research-radar';
-		  at: 'category_for_all' put: 'World';
-		  at: 'category_for_other' put: 'Other';
+		  at: 'region' put: 'World';
+		  at: 'network_name' put: 'Network';
 		  yourself
 ]
 

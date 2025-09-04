@@ -4,10 +4,10 @@ Class {
 	#instVars : [
 		'properties',
 		'project',
+		'networkName',
 		'description',
 		'url',
-		'categoryForAll',
-		'categoryForOther'
+		'region'
 	],
 	#category : #'ResearchRadar-seaside-components'
 }
@@ -15,38 +15,15 @@ Class {
 { #category : #callbacks }
 PropertiesEditor >> accept [
 
+	properties := Dictionary new. 
 	properties
 		at: 'project' put: project;
+		at: 'network_name' put: networkName ;
 		at: 'description' put: description;
 		at: 'ulr' put: url;
-		at: 'category_for_all' put: categoryForAll;
-		at: 'category_for_other' put: categoryForOther.
+		at: 'region' put: region.
 	Radar properties: properties .
 	self answer: nil
-]
-
-{ #category : #accessing }
-PropertiesEditor >> categoryForAll [
-
-	^ categoryForAll
-]
-
-{ #category : #accessing }
-PropertiesEditor >> categoryForAll: anObject [
-
-	categoryForAll := anObject
-]
-
-{ #category : #accessing }
-PropertiesEditor >> categoryForOther [
-
-	^ categoryForOther
-]
-
-{ #category : #accessing }
-PropertiesEditor >> categoryForOther: anObject [
-
-	categoryForOther := anObject
 ]
 
 { #category : #accessing }
@@ -66,11 +43,24 @@ PropertiesEditor >> initialize [
 
 	super initialize.
 	properties := Radar properties.
-	project := properties at: 'project'.
-	description := properties at: 'description'.
-	url := properties at: 'ulr'.
-	categoryForAll := properties at: 'category_for_all'.
-	categoryForOther := properties at: 'category_for_other'
+	project := properties at: 'project' ifAbsent: ''.
+	description := properties at: 'description' ifAbsent: ''.
+	networkName := properties at: 'network_name' ifAbsent: ''.
+	url := properties at: 'ulr' ifAbsent: ''.
+	region := properties at: 'region' ifAbsent: ''.
+
+]
+
+{ #category : #accessing }
+PropertiesEditor >> networkName [
+
+	^ networkName
+]
+
+{ #category : #accessing }
+PropertiesEditor >> networkName: anObject [
+
+	networkName := anObject
 ]
 
 { #category : #accessing }
@@ -97,6 +87,18 @@ PropertiesEditor >> properties: anObject [
 	properties := anObject
 ]
 
+{ #category : #accessing }
+PropertiesEditor >> region [
+
+	^ region
+]
+
+{ #category : #accessing }
+PropertiesEditor >> region: anObject [
+
+	region := anObject
+]
+
 { #category : #rendering }
 PropertiesEditor >> renderContentOn: html [
 
@@ -107,19 +109,19 @@ PropertiesEditor >> renderContentOn: html [
 				html textInput formControl on: #project of: self ].
 
 			html formGroup: [
+				html label: 'Network name'.
+				html textInput formControl on: #networkName of: self ].
+
+
+			html formGroup: [
 				html label: 'Description'.
 				html textArea formControl
 					on: #description of: self;
 					rows: 15 ].
 
 			html formGroup: [
-				html label: 'Category for ALL countries'.
-				html textInput formControl on: #categoryForAll of: self ].
-
-			html formGroup: [
-				html label: 'Category for OTHER countries'.
-				html textInput formControl on: #categoryForOther of: self ].
-
+				html label: 'Region'.
+				html textInput formControl on: #region of: self ].
 
 			html formGroup: [
 				html label: 'URL'.

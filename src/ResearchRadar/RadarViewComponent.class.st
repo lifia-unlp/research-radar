@@ -26,11 +26,17 @@ RadarViewComponent >> children [
 		  taxonomySubcomponent }
 ]
 
+{ #category : #'accessing-properties' }
+RadarViewComponent >> description [
+
+	^ Radar properties at: 'description'
+]
+
 { #category : #initialization }
 RadarViewComponent >> initialize [
 
 	super initialize.
-	self selectLatinamerica.
+	self selectRegion.
 	yearlyEvolutionPlotSubComponent := YearlyEvolutionPlotSubComponent
 		                                   new
 		                                   parent: self;
@@ -53,11 +59,29 @@ RadarViewComponent >> initialize [
 	taxonomySubcomponent := TaxonomySubComponent new
 ]
 
-{ #category : #hooks }
+{ #category : #'accessing-properties' }
+RadarViewComponent >> networkName [
+
+	^ Radar properties at: 'network_name'
+]
+
+{ #category : #'accessing-properties' }
+RadarViewComponent >> projectName [
+
+	^ Radar properties at: 'project'
+]
+
+{ #category : #private }
 RadarViewComponent >> publishedCountries [
 
 	^ (self radar publications flatCollectAsSet: [ :each |
 		   each countries ]) asSortedCollection
+]
+
+{ #category : #'accessing-properties' }
+RadarViewComponent >> regionName [
+
+	^ Radar properties at: 'region'
 ]
 
 { #category : #rendering }
@@ -74,9 +98,9 @@ RadarViewComponent >> renderContentOn: html [
 
 	html container: [
 		self renderNavBarOn: html.
-		selectedTab = 'Latin America' ifTrue: [
+		selectedTab = self regionName ifTrue: [
 			^ self renderGeneralOverviewOn: html ].
-		selectedTab = 'RIPAISC' ifTrue: [
+		selectedTab = self networkName ifTrue: [
 			^ self renderGeneralOverviewOn: html ].
 		self renderOverviewForSelectedCountryOn: html ]
 ]
@@ -131,7 +155,7 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 			  mediumSize: 6 ]
 ]
 
-{ #category : #hooks }
+{ #category : #rendering }
 RadarViewComponent >> renderNavBarOn: html [
 
 	| bar id item |
@@ -142,7 +166,7 @@ RadarViewComponent >> renderNavBarOn: html [
 		expandLarge.
 	bar background beLight.
 	bar with: [
-		html navigationBarBrand: 'RIPAISC radar'.
+		html navigationBarBrand: self projectName.
 
 		"The toggler that is only visible when reducing the width of screen"
 		html navigationBarToggler
@@ -157,13 +181,13 @@ RadarViewComponent >> renderNavBarOn: html [
 				html navigationBarNavigation: [
 						html navigationItem with: [
 								html navigationLink
-									callback: [ self selectLatinamerica ];
-									with: 'Latin America';
+									callback: [ self selectRegion ];
+									with: self regionName ;
 									yourself ].
 						html navigationItem with: [
 							html navigationLink
-								callback: [ self selectRipaisc ];
-								with: 'RIPAISC';
+								callback: [ self selectNetwork ];
+								with: self networkName ;
 								yourself ].
 						self publishedCountries do: [ :each |
 							item := html navigationItem.
@@ -204,16 +228,22 @@ RadarViewComponent >> selectCountry: aCountryName [
 ]
 
 { #category : #callbacks }
-RadarViewComponent >> selectLatinamerica [
+RadarViewComponent >> selectNetwork [
 
-	self selectCountry: 'Latin America'.
-	publications := self radar publications
+	self selectCountry: self networkName .
+	publications := self radar publications select: [ :each |
+		                each byNetwork ]
 ]
 
 { #category : #callbacks }
-RadarViewComponent >> selectRipaisc [
+RadarViewComponent >> selectRegion [
 
-	self selectCountry: 'RIPAISC'.
-	publications := self radar publications select: [ :each |
-		                each byRipaisc ]
+	self selectCountry: self regionName .
+	publications := self radar publications
+]
+
+{ #category : #'accessing-properties' }
+RadarViewComponent >> url [
+
+	^ Radar properties at: 'url'
 ]

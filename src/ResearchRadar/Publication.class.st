@@ -4,12 +4,12 @@ Class {
 	#instVars : [
 		'bibtexEntry',
 		'selfArchivingUrl',
-		'byRipaisc',
-		'ripaiscNodes',
+		'byNetwork',
+		'networkNodes',
 		'topics',
 		'applicationDomains',
 		'countries',
-		'relevanceToQse'
+		'relevanceToTopic'
 	],
 	#category : #'ResearchRadar-model'
 }
@@ -63,15 +63,15 @@ Publication >> bibtexEntry: anObject [
 ]
 
 { #category : #accessing }
-Publication >> byRipaisc [
+Publication >> byNetwork [
 
-	^ byRipaisc
+	^ byNetwork
 ]
 
 { #category : #accessing }
-Publication >> byRipaisc: anObject [
+Publication >> byNetwork: anObject [
 
-	byRipaisc := anObject
+	byNetwork := anObject
 ]
 
 { #category : #accessing }
@@ -101,24 +101,36 @@ Publication >> doi: anObject [
 { #category : #initialization }
 Publication >> initialize [
 	
-	byRipaisc := false.
+	byNetwork := false.
 	countries := OrderedCollection new.
-	ripaiscNodes  := OrderedCollection new.
+	networkNodes  := OrderedCollection new.
 	applicationDomains := OrderedCollection new.
 	topics := OrderedCollection new. 
 	bibtexEntry := BibtexEntry new. 
 ]
 
 { #category : #accessing }
-Publication >> relevanceToQse [
+Publication >> networkNodes [
 
-	^ relevanceToQse
+	^ networkNodes
 ]
 
 { #category : #accessing }
-Publication >> relevanceToQse: anObject [
+Publication >> networkNodes: anObject [
 
-	relevanceToQse := anObject
+	networkNodes := anObject
+]
+
+{ #category : #accessing }
+Publication >> relevanceToTopic [
+
+	^ relevanceToTopic
+]
+
+{ #category : #accessing }
+Publication >> relevanceToTopic: anObject [
+
+	relevanceToTopic := anObject
 ]
 
 { #category : #accessing }
