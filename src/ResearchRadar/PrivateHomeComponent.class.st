@@ -11,12 +11,13 @@ Class {
 PrivateHomeComponent >> renderContentOn: html [
 
 	html container: [
-		secret notNil & (secret = Radar knownSecret) 
+		secret notNil & (secret = Radar knownSecret)
 			ifTrue: [
 				self renderLinkToPublicationsOn: html.
 				self renderLinkToTopicsTaxonomyOn: html.
 				self renderLinkToApplicationDomainsTaxonomyOn: html.
-				self renderLinkToUploadFileOn: html ]
+				self renderLinkToUploadFileOn: html.
+				self renderLinkToPropertiesEditor: html ]
 			ifFalse: [ self renderRequestForSecretOn: html ] ]
 ]
 
@@ -31,6 +32,15 @@ PrivateHomeComponent >> renderLinkToApplicationDomainsTaxonomyOn: html [
 							   publicationsRetrievingBlock: [ self radar publications ];
 							   yourself) ];
 			  with: 'Application domains taxonomy' ]
+]
+
+{ #category : #rendering }
+PrivateHomeComponent >> renderLinkToPropertiesEditor: html [
+
+	^ html paragraph: [
+		  html anchor
+			  callback: [ self call: PropertiesEditor new ];
+			  with: 'Properties editor' ]
 ]
 
 { #category : #rendering }

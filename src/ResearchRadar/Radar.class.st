@@ -37,6 +37,43 @@ Radar class >> monitor [
 	^ monitor ifNil: [ monitor := Monitor new ]
 ]
 
+{ #category : #properties }
+Radar class >> properties [
+
+	self propertiesFile ifExists: [ :it |
+		^ it readStreamDo: [ :stream | STON fromString: stream contents ] ].
+	^ self propertiesDefault 
+]
+
+{ #category : #properties }
+Radar class >> properties: aDictionary [
+
+	self propertiesDefault keysAndValuesDo: [ :key :value |
+		aDictionary at: key ifAbsentPut: value ].
+
+	self monitor critical: [
+		self propertiesFile writeStreamDo: [ :stream |
+			stream nextPutAll: (STON toStringPretty: aDictionary) ] ]
+]
+
+{ #category : #properties }
+Radar class >> propertiesDefault [
+
+	^ Dictionary new
+		  at: 'project' put: 'Research Radar';
+		  at: 'description' put: 'Monitoring regional research';
+		  at: 'ulr' put: 'https://github.com/lifia-unlp/research-radar';
+		  at: 'category_for_all' put: 'World';
+		  at: 'category_for_other' put: 'Other';
+		  yourself
+]
+
+{ #category : #properties }
+Radar class >> propertiesFile [
+
+	^ self repositoryFolder / 'properties.txt'
+]
+
 { #category : #accessing }
 Radar class >> readFrom: aFileReference [
 
