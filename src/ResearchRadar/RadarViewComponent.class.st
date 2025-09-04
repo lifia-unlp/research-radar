@@ -62,13 +62,13 @@ RadarViewComponent >> initialize [
 { #category : #'accessing-properties' }
 RadarViewComponent >> networkName [
 
-	^ Radar properties at: 'network_name'
+	^ Radar radarProperties at: 'network_name'
 ]
 
 { #category : #'accessing-properties' }
 RadarViewComponent >> projectName [
 
-	^ Radar properties at: 'project'
+	^ Radar radarProperties at: 'project'
 ]
 
 { #category : #private }
@@ -81,7 +81,7 @@ RadarViewComponent >> publishedCountries [
 { #category : #'accessing-properties' }
 RadarViewComponent >> regionName [
 
-	^ Radar properties at: 'region'
+	^ Radar radarProperties at: 'region'
 ]
 
 { #category : #rendering }
