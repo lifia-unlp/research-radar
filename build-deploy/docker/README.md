@@ -15,7 +15,7 @@ docker push cientopolis/research-radar:[commit-hash]
 # To deploy / run
 
 ````
-sudo docker pull cientopolis/memorias:latest
+sudo docker pull cientopolis/research:latest
 
 sudo docker compose down
 
