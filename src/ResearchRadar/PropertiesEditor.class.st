@@ -22,7 +22,7 @@ PropertiesEditor >> accept [
 		at: 'description' put: description;
 		at: 'ulr' put: url;
 		at: 'region' put: region.
-	Radar properties: properties .
+	Radar radarProperties: properties .
 	self answer: nil
 ]
 
@@ -42,7 +42,7 @@ PropertiesEditor >> description: anObject [
 PropertiesEditor >> initialize [
 
 	super initialize.
-	properties := Radar properties.
+	properties := Radar radarProperties.
 	project := properties at: 'project' ifAbsent: ''.
 	description := properties at: 'description' ifAbsent: ''.
 	networkName := properties at: 'network_name' ifAbsent: ''.

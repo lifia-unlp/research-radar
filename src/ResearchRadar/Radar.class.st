@@ -38,25 +38,6 @@ Radar class >> monitor [
 ]
 
 { #category : #properties }
-Radar class >> properties [
-
-	self propertiesFile ifExists: [ :it |
-		^ it readStreamDo: [ :stream | STON fromString: stream contents ] ].
-	^ self propertiesDefault 
-]
-
-{ #category : #properties }
-Radar class >> properties: aDictionary [
-
-	self propertiesDefault keysAndValuesDo: [ :key :value |
-		aDictionary at: key ifAbsentPut: value ].
-
-	self monitor critical: [
-		self propertiesFile writeStreamDo: [ :stream |
-			stream nextPutAll: (STON toStringPretty: aDictionary) ] ]
-]
-
-{ #category : #properties }
 Radar class >> propertiesDefault [
 
 	^ Dictionary new
@@ -72,6 +53,25 @@ Radar class >> propertiesDefault [
 Radar class >> propertiesFile [
 
 	^ self repositoryFolder / 'properties.txt'
+]
+
+{ #category : #properties }
+Radar class >> radarProperties [
+
+	self propertiesFile ifExists: [ :it |
+		^ it readStreamDo: [ :stream | STON fromString: stream contents ] ].
+	^ self propertiesDefault 
+]
+
+{ #category : #properties }
+Radar class >> radarProperties: aDictionary [
+
+	self propertiesDefault keysAndValuesDo: [ :key :value |
+		aDictionary at: key ifAbsentPut: value ].
+
+	self monitor critical: [
+		self propertiesFile writeStreamDo: [ :stream |
+			stream nextPutAll: (STON toStringPretty: aDictionary) ] ]
 ]
 
 { #category : #accessing }

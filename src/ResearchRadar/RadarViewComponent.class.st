@@ -29,7 +29,7 @@ RadarViewComponent >> children [
 { #category : #'accessing-properties' }
 RadarViewComponent >> description [
 
-	^ Radar properties at: 'description'
+	^ Radar radarProperties at: 'description'
 ]
 
 { #category : #initialization }
@@ -245,5 +245,5 @@ RadarViewComponent >> selectRegion [
 { #category : #'accessing-properties' }
 RadarViewComponent >> url [
 
-	^ Radar properties at: 'url'
+	^ Radar radarProperties at: 'url'
 ]
