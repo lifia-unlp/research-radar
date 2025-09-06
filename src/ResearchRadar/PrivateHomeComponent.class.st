@@ -11,7 +11,7 @@ Class {
 PrivateHomeComponent >> renderContentOn: html [
 
 	html container: [
-		secret notNil & (secret trimBoth = Radar knownSecret)
+		(secret notNil and: [(secret trimBoth = Radar knownSecret)])
 			ifTrue: [
 				self renderLinkToPublicationsOn: html.
 				self renderLinkToTopicsTaxonomyOn: html.
