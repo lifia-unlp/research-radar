@@ -20,7 +20,7 @@ Class {
 Radar class >> knownSecret [
 
 	self secretFile ifExists: [ :it |
-		^ it readStreamDo: [ :stream | stream contents ] ].
+		^ it readStreamDo: [ :stream | stream contents trimBoth ] ].
 	^ nil
 ]
 
@@ -28,7 +28,7 @@ Radar class >> knownSecret [
 Radar class >> knownSecret: aString [
 
 	self secretFile writeStreamDo: [ :stream |
-		stream nextPutAll: aString ]
+		stream nextPutAll: aString trimBoth ]
 ]
 
 { #category : #accessing }
