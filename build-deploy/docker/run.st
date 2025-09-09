@@ -22,8 +22,6 @@ apps add: (WAAdmin
 
 apps do: [:app | 
  app
-	addLibrary: JQDeploymentLibrary;
-	addLibrary: JQUiDeploymentLibrary;
 	addLibrary: SBSDeploymentLibrary .	
 ].
 
