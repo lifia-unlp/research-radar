@@ -242,6 +242,12 @@ RadarViewComponent >> selectRegion [
 	publications := self radar publications
 ]
 
+{ #category : #rendering }
+RadarViewComponent >> updateRoot: aWARoot [
+
+	SBSDeploymentLibrary addLoadScriptTo: aWARoot
+]
+
 { #category : #'accessing-properties' }
 RadarViewComponent >> url [
 
