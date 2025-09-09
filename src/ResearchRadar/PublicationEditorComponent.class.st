@@ -140,6 +140,18 @@ PublicationEditorComponent >> fetchBibtex [
 ]
 
 { #category : #accessing }
+PublicationEditorComponent >> producedByNetwork [
+
+	^ producedByNetwork
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> producedByNetwork: anObject [
+
+	producedByNetwork := anObject
+]
+
+{ #category : #accessing }
 PublicationEditorComponent >> publication [
 
 	^ publication
@@ -169,6 +181,18 @@ PublicationEditorComponent >> publication: anObject [
 		                                fromElementsWithLevelsIn:
 		                                self applicationDomainsToChooseFrom.
 	bibtexEntry := publication bibtexEntry
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> relevanceToTopic [
+
+	^ relevanceToTopic
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> relevanceToTopic: anObject [
+
+	relevanceToTopic := anObject
 ]
 
 { #category : #rendering }

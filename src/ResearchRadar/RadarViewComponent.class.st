@@ -232,7 +232,7 @@ RadarViewComponent >> selectNetwork [
 
 	self selectCountry: self networkName .
 	publications := self radar publications select: [ :each |
-		                each byNetwork ]
+		                each byNetwork = true ] "backwards compatibility with old records"
 ]
 
 { #category : #callbacks }
