@@ -3,7 +3,6 @@ Class {
 	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'applicationDomainsTaxonomyPlotSubcomponent',
-		'selectedTab',
 		'publications',
 		'countryPlotSubComponent',
 		'publicationsListSubComponent',
@@ -13,6 +12,12 @@ Class {
 	],
 	#category : #'ResearchRadar-seaside-components'
 }
+
+{ #category : #publications }
+RadarViewComponent >> allPublications [
+
+	^ self radar publications
+]
 
 { #category : #hooks }
 RadarViewComponent >> children [
@@ -36,7 +41,6 @@ RadarViewComponent >> description [
 RadarViewComponent >> initialize [
 
 	super initialize.
-	self selectRegion.
 	yearlyEvolutionPlotSubComponent := YearlyEvolutionPlotSubComponent
 		                                   new
 		                                   parent: self;
@@ -59,10 +63,23 @@ RadarViewComponent >> initialize [
 	taxonomySubcomponent := TaxonomySubComponent new
 ]
 
+{ #category : #testing }
+RadarViewComponent >> isStateless [
+   ^true
+
+
+]
+
 { #category : #'accessing-properties' }
 RadarViewComponent >> networkName [
 
 	^ Radar radarProperties at: 'network_name'
+]
+
+{ #category : #publications }
+RadarViewComponent >> networkPublications [
+
+	^ self allPublications select: [ :each | each byNetwork = true ]
 ]
 
 { #category : #'accessing-properties' }
@@ -71,11 +88,19 @@ RadarViewComponent >> projectName [
 	^ Radar radarProperties at: 'project'
 ]
 
+{ #category : #publications }
+RadarViewComponent >> publicationsFor: aCountry [
+
+	^ self radar publications select: [ :each |
+		  (each countries collect: #asLowercase) includes:
+			  aCountry asLowercase ]
+]
+
 { #category : #private }
 RadarViewComponent >> publishedCountries [
 
-	^ (self radar publications flatCollectAsSet: [ :each |
-		   each countries ]) asSortedCollection
+	^ (self allPublications flatCollectAsSet: [ :each | each countries ])
+		  asSortedCollection
 ]
 
 { #category : #'accessing-properties' }
@@ -96,13 +121,38 @@ RadarViewComponent >> renderBriefTaxonomyOn: html [
 { #category : #rendering }
 RadarViewComponent >> renderContentOn: html [
 
+	| selectedCountry selectedArea |
+	selectedArea := self selectedArea.
+	selectedCountry := (self publishedCountries includes: selectedArea)
+		                   ifTrue: [ selectedArea ]
+		                   ifFalse: [ nil ].
 	html container: [
 		self renderNavBarOn: html.
-		selectedTab = self regionName ifTrue: [
-			^ self renderGeneralOverviewOn: html ].
-		selectedTab = self networkName ifTrue: [
-			^ self renderGeneralOverviewOn: html ].
-		self renderOverviewForSelectedCountryOn: html ]
+
+		selectedCountry ifNotNil: [
+			publications := self publicationsFor: selectedCountry.
+			self renderCountryOverviewFor: selectedCountry on: html.
+			^ self ].
+
+		selectedArea = self networkName ifTrue: [
+			publications := self networkPublications.
+			self renderRegionOverviewFor: self networkName on: html.
+			^ self ].
+
+		publications := self allPublications.
+		self renderRegionOverviewFor: self regionName on: html ]
+]
+
+{ #category : #rendering }
+RadarViewComponent >> renderCountryOverviewFor: aCountry on: html [
+
+	html heading: aCountry.
+	self renderTotalCountOn: html.
+	self renderBriefTaxonomyOn: html.
+	self renderFullTaxonomyOn: html.
+	publicationsListSubComponent publications: publications.
+	"MAke publications be grouped by year, with a simple topic cloud in front of it"
+	html render: publicationsListSubComponent
 ]
 
 { #category : #rendering }
@@ -115,9 +165,52 @@ RadarViewComponent >> renderFullTaxonomyOn: html [
 ]
 
 { #category : #rendering }
-RadarViewComponent >> renderGeneralOverviewOn: html [
+RadarViewComponent >> renderNavBarOn: html [
 
-	html heading: selectedTab.
+	| bar id item |
+	id := '#navbarCollapsed'.
+	bar := html navigationBar.
+	bar
+		beLight;
+		expandLarge.
+	bar background beLight.
+	bar with: [
+		html navigationBarBrand: self projectName.
+
+		"The toggler that is only visible when reducing the width of screen"
+		html navigationBarToggler
+			beButtonType;
+			collapse;
+			dataTarget: id;
+			with: [ html navigationBarTogglerIcon ].
+
+		html navigationBarCollapse collapse
+			id: 'navbarCollapsed';
+			with: [
+				html navigationBarNavigation: [
+						html navigationItem with: [
+								html navigationLink
+									url: (self urlForArea: self regionName);
+									with: self regionName ;
+									yourself ].
+						html navigationItem with: [
+							html navigationLink
+								url: (self urlForArea: self networkName );
+								with: self networkName ;
+								yourself ].
+						self publishedCountries do: [ :each |
+							item := html navigationItem.
+							item with: [
+								html navigationLink
+									url: (self urlForArea: each);
+									with: each;
+									yourself ] ] ] ] ]
+]
+
+{ #category : #rendering }
+RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
+
+	html heading: regionName .
 	html paragraph: [
 		html strong:
 			'Total number of  publications: ' , publications size greaseString ].
@@ -156,61 +249,6 @@ RadarViewComponent >> renderGeneralOverviewOn: html [
 ]
 
 { #category : #rendering }
-RadarViewComponent >> renderNavBarOn: html [
-
-	| bar id item |
-	id := '#navbarCollapsed'.
-	bar := html navigationBar.
-	bar
-		beLight;
-		expandLarge.
-	bar background beLight.
-	bar with: [
-		html navigationBarBrand: self projectName.
-
-		"The toggler that is only visible when reducing the width of screen"
-		html navigationBarToggler
-			beButtonType;
-			collapse;
-			dataTarget: id;
-			with: [ html navigationBarTogglerIcon ].
-
-		html navigationBarCollapse collapse
-			id: 'navbarCollapsed';
-			with: [
-				html navigationBarNavigation: [
-						html navigationItem with: [
-								html navigationLink
-									callback: [ self selectRegion ];
-									with: self regionName ;
-									yourself ].
-						html navigationItem with: [
-							html navigationLink
-								callback: [ self selectNetwork ];
-								with: self networkName ;
-								yourself ].
-						self publishedCountries do: [ :each |
-							item := html navigationItem.
-							item with: [
-								html navigationLink
-									callback: [ self selectCountry: each ];
-									with: each;
-									yourself ] ] ] ] ]
-]
-
-{ #category : #rendering }
-RadarViewComponent >> renderOverviewForSelectedCountryOn: html [
-
-	html heading: selectedTab.
-	self renderTotalCountOn: html.
-	self renderBriefTaxonomyOn: html.
-	self renderFullTaxonomyOn: html.
-	publicationsListSubComponent publications: publications.
-	"MAke publications be grouped by year, with a simple topic cloud in front of it"
-	html render: publicationsListSubComponent
-]
-
-{ #category : #rendering }
 RadarViewComponent >> renderTotalCountOn: html [
 
 	html paragraph: [
@@ -219,27 +257,13 @@ RadarViewComponent >> renderTotalCountOn: html [
 			text: publications size greaseString ]
 ]
 
-{ #category : #callbacks }
-RadarViewComponent >> selectCountry: aCountryName [
+{ #category : #navigating }
+RadarViewComponent >> selectedArea [
 
-	selectedTab := aCountryName.
-	publications := self radar publications select: [ :each |
-		                each countries includes: aCountryName ]
-]
-
-{ #category : #callbacks }
-RadarViewComponent >> selectNetwork [
-
-	self selectCountry: self networkName .
-	publications := self radar publications select: [ :each |
-		                each byNetwork = true ] "backwards compatibility with old records"
-]
-
-{ #category : #callbacks }
-RadarViewComponent >> selectRegion [
-
-	self selectCountry: self regionName .
-	publications := self radar publications
+	| segments |
+	segments := self requestContext request url path.
+	segments size = 2 ifTrue: [ ^ segments second ].
+	^ nil
 ]
 
 { #category : #rendering }
@@ -252,4 +276,10 @@ RadarViewComponent >> updateRoot: aWARoot [
 RadarViewComponent >> url [
 
 	^ Radar radarProperties at: 'url'
+]
+
+{ #category : #rendering }
+RadarViewComponent >> urlForArea: areaName [
+
+	^ '/' , self requestContext request url path first , '/' , areaName
 ]
