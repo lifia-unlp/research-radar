@@ -25,4 +25,7 @@ apps do: [:app |
 	addLibrary: SBSDeploymentLibrary .	
 ].
 
+(WAAdmin defaultDispatcher handlerAt: 'research-radar')
+   configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.
+
 WAAdmin defaultDispatcher defaultName: 'research-radar'.
