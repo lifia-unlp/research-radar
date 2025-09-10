@@ -281,5 +281,11 @@ RadarViewComponent >> url [
 { #category : #rendering }
 RadarViewComponent >> urlForArea: areaName [
 
-	^ '/' , self requestContext request url path first , '/' , areaName
+	| path  |
+	path := self requestContext request url path
+		        ifEmpty: [
+		        '/' , WAAdmin defaultDispatcher defaultName , '/' ]
+		        ifNotEmpty: [ :it | '/' , it first , '/' ].
+
+	^ path , areaName
 ]
