@@ -26,7 +26,7 @@ PublicationsListSubComponent >> delete: each [
 PublicationsListSubComponent >> edit: aPublication [
 
 	| publication |
-	publication := self call: ((PublicationEditorComponent caller: self)
+	publication := self parent call: ((PublicationEditorComponent caller: self)
 			                publication: aPublication;
 			                yourself).
 	publication ifNil: [ ^ self ].

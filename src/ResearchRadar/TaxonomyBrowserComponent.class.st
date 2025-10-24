@@ -78,10 +78,11 @@ TaxonomyBrowserComponent >> description: anObject [
 
 { #category : #initialize }
 TaxonomyBrowserComponent >> initialize [
-	super initialize .
-	publicationsListSubcomponent := PublicationsListSubComponent new.
-	publicationsListSubcomponent parent: self.
-	
+
+	super initialize.
+	publicationsListSubcomponent := PublicationsListSubComponent parent:
+		                                self.
+	publicationsListSubcomponent parent: self
 ]
 
 { #category : #accessing }

@@ -57,9 +57,8 @@ RadarViewComponent >> initialize [
 	countryPlotSubComponent := CountryPlotSubComponent new
 		                           parent: self;
 		                           yourself.
-	publicationsListSubComponent := PublicationsListSubComponent new
-		                                parent: self;
-		                                yourself.
+	publicationsListSubComponent := PublicationsListSubComponent parent:
+		                                self.
 	taxonomySubcomponent := TaxonomySubComponent new
 ]
 

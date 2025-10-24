@@ -12,7 +12,11 @@ Class {
 PublicationsBrowserComponent >> addNewPublication [
 
 	| publication |
-	publication := self call: (PublicationEditorComponent caller: self).
+	publication := self call:
+		               ((PublicationEditorComponent caller: self)
+			                publication: (Publication new
+					                 bibtexEntry: BibtexEntry emptyArticle;
+					                 yourself)).
 	publication ifNil: [ ^ self ].
 	self radar publications add: publication.
 	self save
@@ -38,7 +42,8 @@ PublicationsBrowserComponent >> initialize [
 
 	super initialize.
 	hideDone := true.
-	publicationsListSubComponent := PublicationsListSubComponent new.
+	publicationsListSubComponent := PublicationsListSubComponent parent:
+		                                self.
 	publicationsListSubComponent
 		enableEditing: true;
 		showAbstracts: true

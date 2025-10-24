@@ -14,6 +14,14 @@ Class {
 }
 
 { #category : #accessing }
+RadarAbstractSubComponent class >> parent: aComponent [
+
+	^ self new
+		  parent: aComponent;
+		  yourself
+]
+
+{ #category : #accessing }
 RadarAbstractSubComponent >> parent [
 
 	^ parent

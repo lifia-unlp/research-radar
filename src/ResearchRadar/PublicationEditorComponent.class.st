@@ -16,6 +16,9 @@ Class {
 { #category : #callbacks }
 PublicationEditorComponent >> accept [
 
+	bibtexEntry  title isEmpty | bibtexEntry author isEmpty
+	| bibtexEntry year isEmpty ifTrue: [ ^ self ].
+
 	publication ifNil: [ publication := Publication new ].
 	bibtexEntry ifNotNil: [ :it | publication bibtexEntry: it ].
 	publication
@@ -79,26 +82,6 @@ PublicationEditorComponent >> editBibtexEntry [
 			first.
 	result := self call: bibtexChunckImportComponent.
 	result ifNotNil: [ :it | bibtexEntry := it ]
-]
-
-{ #category : #callbacks }
-PublicationEditorComponent >> fetchBibtex [
-
-	doi ifNil: [ ^ self ].
-	bibtexEntry := DoiOrgAPI new get: 'https://doi.org/' , doi.
-	bibtexEntry ifNil: [
-		title := 'Fetching failed'.
-		year := 'Fetching failed'.
-		authors := 'Fetching failed'.
-		abstract := 'Fetching failed'.
-		url := 'Fetching failed'.
-		^ self ].
-	bibtexEntry := bibtexEntry cleanupLatexAccentsAndBraces.
-	title := bibtexEntry title.
-	year := bibtexEntry year.
-	authors := bibtexEntry author.
-	abstract := bibtexEntry abstract.
-	url := bibtexEntry url
 ]
 
 { #category : #accessing }
@@ -223,7 +206,7 @@ PublicationEditorComponent >> renderContentOn: html [
 				html formSelect
 					on: #relevanceToTopic of: self;
 					list: self valuesForRelevanceToQse ].
-
+			html break.
 			html formGroup: [
 				html formButton
 					callback: [ self accept ];
