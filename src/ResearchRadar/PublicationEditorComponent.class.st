@@ -3,52 +3,26 @@ Class {
 	#superclass : #RadarAbstractComponent,
 	#instVars : [
 		'publication',
-		'title',
-		'selfArchivingUrl',
-		'url',
-		'abstract',
-		'authors',
-		'year',
-		'doi',
 		'countries',
-		'bibtexEntry',
 		'applicationDomainsWithLevels',
 		'topicsWithLevels',
 		'producedByNetwork',
-		'relevanceToTopic'
+		'relevanceToTopic',
+		'bibtexEntry'
 	],
 	#category : #'ResearchRadar-seaside-components'
 }
-
-{ #category : #accessing }
-PublicationEditorComponent >> abstract [
-
-	^ abstract
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> abstract: anObject [
-
-	abstract := anObject
-]
 
 { #category : #callbacks }
 PublicationEditorComponent >> accept [
 
 	publication ifNil: [ publication := Publication new ].
-	bibtexEntry ifNotNil: [ publication bibtexEntry: bibtexEntry ].
+	bibtexEntry ifNotNil: [ :it | publication bibtexEntry: it ].
 	publication
-		title: title;
-		selfArchivingUrl: selfArchivingUrl;
-		url: url;
-		abstract: abstract;
-		author: authors;
-		year: year;
-		doi: doi;
 		countries: countries;
 		topics: (topicsWithLevels collect: #value);
 		applicationDomains: (applicationDomainsWithLevels collect: #value);
-		relevanceToTopic: relevanceToTopic ;
+		relevanceToTopic: relevanceToTopic;
 		byNetwork: producedByNetwork.
 	self answer: publication
 ]
@@ -69,18 +43,6 @@ PublicationEditorComponent >> applicationDomainsWithLevels [
 PublicationEditorComponent >> applicationDomainsWithLevels: anObject [
 
 	applicationDomainsWithLevels := anObject
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> authors [
-
-	^ authors
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> authors: anObject [
-
-	authors := anObject
 ]
 
 { #category : #private }
@@ -107,16 +69,16 @@ PublicationEditorComponent >> countriesToChooseFrom [
 	^ self radar countries
 ]
 
-{ #category : #accessing }
-PublicationEditorComponent >> doi [
+{ #category : #callbacks }
+PublicationEditorComponent >> editBibtexEntry [
 
-	^ doi
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> doi: anObject [
-
-	doi := anObject
+	| bibtexChunckImportComponent result |
+	bibtexChunckImportComponent := BibtexChunckImportComponent new.
+	bibtexChunckImportComponent bibtexEntry:
+		(PPBibtexParser new end parse: publication bibtexEntry printString)
+			first.
+	result := self call: bibtexChunckImportComponent.
+	result ifNotNil: [ :it | bibtexEntry := it ]
 ]
 
 { #category : #callbacks }
@@ -161,16 +123,11 @@ PublicationEditorComponent >> publication [
 PublicationEditorComponent >> publication: anObject [
 
 	publication := anObject.
-	title := publication title.
-	abstract := publication abstract.
-	year := publication year.
-	doi := publication doi.
-	url := publication url.
-	authors := publication author.
+	bibtexEntry := publication bibtexEntry .
+
 	producedByNetwork := publication byNetwork.
-	selfArchivingUrl := publication selfArchivingUrl.
 	countries := publication countries.
-	relevanceToTopic := publication relevanceToTopic .
+	relevanceToTopic := publication relevanceToTopic.
 	topicsWithLevels := self
 		                    choose: publication topics
 		                    fromElementsWithLevelsIn:
@@ -179,8 +136,7 @@ PublicationEditorComponent >> publication: anObject [
 		                                choose:
 		                                publication applicationDomains
 		                                fromElementsWithLevelsIn:
-		                                self applicationDomainsToChooseFrom.
-	bibtexEntry := publication bibtexEntry
+		                                self applicationDomainsToChooseFrom
 ]
 
 { #category : #accessing }
@@ -196,35 +152,37 @@ PublicationEditorComponent >> relevanceToTopic: anObject [
 ]
 
 { #category : #rendering }
+PublicationEditorComponent >> renderBibtexEntryOn: html [
+
+	html preformatted: [
+		html
+			text: '@';
+			text: bibtexEntry type;
+			text: '{';
+			text: bibtexEntry citationKey;
+			text: ',';
+			break.
+		bibtexEntry tags do: [ :tag |
+			html space.
+			html
+				text: tag name;
+				text: ' = {';
+				text: tag value;
+				text: '},';
+				break ].
+		html text: '}'.
+		html break.
+		html anchor
+			callback: [ self editBibtexEntry ];
+			with: 'Edit' ]
+]
+
+{ #category : #rendering }
 PublicationEditorComponent >> renderContentOn: html [
 
 	html container: [
+		self renderBibtexEntryOn: html.
 		html form: [
-			html formGroup: [
-				html label: 'DOI'.
-				publication ifNil: [
-					html space.
-					html outlineButton
-						callback: [ self fetchBibtex ];
-						bePrimary;
-						beSmall;
-						with: 'Fetch' ] ].
-			html textInput formControl on: #doi of: self.
-
-
-			html formGroup: [
-				html label: 'Title'.
-				html textInput formControl on: #title of: self ].
-
-
-			html formGroup: [
-				html label: 'Year'.
-				html textInput formControl on: #year of: self ].
-
-			html formGroup: [
-				html label: 'Authors'.
-				html textInput formControl on: #authors of: self ].
-
 			html formGroup
 				formCheck;
 				with: [
@@ -233,19 +191,6 @@ PublicationEditorComponent >> renderContentOn: html [
 								on: #producedByNetwork of: self;
 								with: 'Any author belongs to the network?' ] ].
 
-			html formGroup: [
-				html label: 'Abstract'.
-				html textArea formControl
-					on: #abstract of: self;
-					rows: 15 ].
-
-			html formGroup: [
-				html label: 'URL'.
-				html textInput formControl on: #url of: self ].
-
-			html formGroup: [
-				html label: 'Self archiving URL'.
-				html textInput formControl on: #selfArchivingUrl of: self ].
 
 			html formGroup: [
 				html label: 'Iberoamerican countries'.
@@ -292,30 +237,6 @@ PublicationEditorComponent >> renderContentOn: html [
 				html space ] ] ]
 ]
 
-{ #category : #accessing }
-PublicationEditorComponent >> selfArchivingUrl [
-
-	^ selfArchivingUrl
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> selfArchivingUrl: anObject [
-
-	selfArchivingUrl := anObject
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> title [
-
-	^ title
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> title: anObject [
-
-	title := anObject
-]
-
 { #category : #rendering }
 PublicationEditorComponent >> topicsToChooseFrom [
 
@@ -334,32 +255,8 @@ PublicationEditorComponent >> topicsWithLevels: anObject [
 	topicsWithLevels := anObject
 ]
 
-{ #category : #accessing }
-PublicationEditorComponent >> url [
-
-	^ url
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> url: anObject [
-
-	url := anObject
-]
-
 { #category : #rendering }
 PublicationEditorComponent >> valuesForRelevanceToQse [
 
 	^ { 'Clear'. 'Moderately clear'. 'Unclear'. nil }
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> year [
-
-	^ year
-]
-
-{ #category : #accessing }
-PublicationEditorComponent >> year: anObject [
-
-	year := anObject
 ]

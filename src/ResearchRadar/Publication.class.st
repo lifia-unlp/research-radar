@@ -21,12 +21,6 @@ Publication >> abstract [
 ]
 
 { #category : #accessing }
-Publication >> abstract: anObject [
-
-	bibtexEntry abstract: anObject
-]
-
-{ #category : #accessing }
 Publication >> applicationDomains [
 
 	^ applicationDomains
@@ -42,12 +36,6 @@ Publication >> applicationDomains: anObject [
 Publication >> author [
 
 	^ bibtexEntry author
-]
-
-{ #category : #accessing }
-Publication >> author: aString [
-
-	bibtexEntry author: aString
 ]
 
 { #category : #accessing }
@@ -90,12 +78,6 @@ Publication >> countries: anObject [
 Publication >> doi [
 
 	^ bibtexEntry doi
-]
-
-{ #category : #accessing }
-Publication >> doi: anObject [
-
-	bibtexEntry doi: anObject
 ]
 
 { #category : #initialization }
@@ -152,12 +134,6 @@ Publication >> title [
 ]
 
 { #category : #accessing }
-Publication >> title: anObject [
-
-	bibtexEntry title: anObject
-]
-
-{ #category : #accessing }
 Publication >> topics [
 
 	^ topics
@@ -176,19 +152,7 @@ Publication >> url [
 ]
 
 { #category : #accessing }
-Publication >> url: anObject [
-
-	bibtexEntry url: anObject
-]
-
-{ #category : #accessing }
 Publication >> year [
 
 	^ bibtexEntry year
-]
-
-{ #category : #accessing }
-Publication >> year: anObject [
-
-	bibtexEntry year: anObject
 ]
