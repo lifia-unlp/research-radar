@@ -14,11 +14,20 @@ ZnZincServerAdaptor startOn: 8080.
 apps := OrderedCollection new. 
 
 apps add: (WAAdmin
-	register: RadarViewComponent 
-	asApplicationAt: 'research-radar').
+	register: CountryViewComponent   
+	asApplicationAt: CountryViewComponent baseUrl ).
+	
+apps add: (WAAdmin
+	register: RegionViewComponent    
+	asApplicationAt: RegionViewComponent baseUrl ).
+	
+apps add: (WAAdmin
+	register: TopicViewComponent   
+	asApplicationAt: TopicViewComponent baseUrl ).
+	
 apps add: (WAAdmin
 	register: PrivateHomeComponent
-	asApplicationAt: 'research-radar-admin').
+	asApplicationAt: PrivateHomeComponent baseUrl).
 
 apps do: [:app | 
  app
@@ -29,3 +38,4 @@ apps do: [:app |
    configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.
 
 WAAdmin defaultDispatcher defaultName: 'research-radar'.
+

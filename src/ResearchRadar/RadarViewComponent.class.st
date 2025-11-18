@@ -8,7 +8,8 @@ Class {
 		'publicationsListSubComponent',
 		'topicsTaxonomyPlotSubComponent',
 		'yearlyEvolutionPlotSubComponent',
-		'taxonomySubcomponent'
+		'taxonomySubcomponent',
+		'menuSubcomponent'
 	],
 	#category : #'ResearchRadar-seaside-components'
 }
@@ -28,13 +29,29 @@ RadarViewComponent >> children [
 		  applicationDomainsTaxonomyPlotSubcomponent.
 		  countryPlotSubComponent.
 		  publicationsListSubComponent.
-		  taxonomySubcomponent }
+		  taxonomySubcomponent.
+		  menuSubcomponent }
+]
+
+{ #category : #'accessing-url-parts' }
+RadarViewComponent >> defaultFilter [
+
+	^ nil
 ]
 
 { #category : #'accessing-properties' }
 RadarViewComponent >> description [
 
 	^ Radar radarProperties at: 'description'
+]
+
+{ #category : #'accessing-url-parts' }
+RadarViewComponent >> filter [
+
+	| segments |
+	segments := self requestContext request url path.
+	segments size = 2 ifTrue: [ ^ segments second ].
+	^ self defaultFilter
 ]
 
 { #category : #initialization }
@@ -59,7 +76,14 @@ RadarViewComponent >> initialize [
 		                           yourself.
 	publicationsListSubComponent := PublicationsListSubComponent parent:
 		                                self.
-	taxonomySubcomponent := TaxonomySubComponent new
+	taxonomySubcomponent := TaxonomySubComponent new.
+	menuSubcomponent := RadarMenuSubcomponent parent: self.
+	menuSubcomponent
+		brand: 'RIPAISC'
+		regions: { 'Latin America'. 'RIPAISC' }
+		countries:
+			{ 'Argentina'. 'Brasil'. 'Chile'. 'Colombia'. 'Ecuador'. 'México'.
+			'Paraguay'. 'Uruguay' }
 ]
 
 { #category : #testing }
@@ -81,13 +105,40 @@ RadarViewComponent >> networkPublications [
 	^ self allPublications select: [ :each | each byNetwork = true ]
 ]
 
+{ #category : #remove }
+RadarViewComponent >> oldRenderContentOn: html [
+
+	| selectedCountry selectedArea selectedTopic |
+	selectedArea := self selectedArea.
+	selectedCountry := (self publishedCountries includes: selectedArea)
+		                   ifTrue: [ selectedArea ]
+		                   ifFalse: [ nil ].
+	selectedTopic := self selectedTopic.
+	html container: [
+		html render: menuSubcomponent.
+		self renderNavBarOn: html.
+
+		selectedCountry ifNotNil: [
+			publications := self publicationsFor: selectedCountry.
+			self renderCountryOverviewFor: selectedCountry on: html.
+			^ self ].
+
+		selectedArea = self networkName ifTrue: [
+			publications := self networkPublications.
+			self renderRegionOverviewFor: self networkName on: html.
+			^ self ].
+
+		publications := self allPublications.
+		self renderRegionOverviewFor: self regionName on: html ]
+]
+
 { #category : #'accessing-properties' }
 RadarViewComponent >> projectName [
 
 	^ Radar radarProperties at: 'project'
 ]
 
-{ #category : #publications }
+{ #category : #remove }
 RadarViewComponent >> publicationsFor: aCountry [
 
 	^ self radar publications select: [ :each |
@@ -120,29 +171,13 @@ RadarViewComponent >> renderBriefTaxonomyOn: html [
 { #category : #rendering }
 RadarViewComponent >> renderContentOn: html [
 
-	| selectedCountry selectedArea |
-	selectedArea := self selectedArea.
-	selectedCountry := (self publishedCountries includes: selectedArea)
-		                   ifTrue: [ selectedArea ]
-		                   ifFalse: [ nil ].
 	html container: [
-		self renderNavBarOn: html.
-
-		selectedCountry ifNotNil: [
-			publications := self publicationsFor: selectedCountry.
-			self renderCountryOverviewFor: selectedCountry on: html.
-			^ self ].
-
-		selectedArea = self networkName ifTrue: [
-			publications := self networkPublications.
-			self renderRegionOverviewFor: self networkName on: html.
-			^ self ].
-
-		publications := self allPublications.
-		self renderRegionOverviewFor: self regionName on: html ]
+		html render: menuSubcomponent.
+		publications := self selectedPublications.
+		self renderSpecificContentOn: html ]
 ]
 
-{ #category : #rendering }
+{ #category : #remove }
 RadarViewComponent >> renderCountryOverviewFor: aCountry on: html [
 
 	html heading: aCountry.
@@ -207,12 +242,8 @@ RadarViewComponent >> renderNavBarOn: html [
 ]
 
 { #category : #rendering }
-RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
+RadarViewComponent >> renderPlotsOn: html [
 
-	html heading: regionName .
-	html paragraph: [
-		html strong:
-			'Total number of  publications: ' , publications size greaseString ].
 	html row: [
 		html
 			column: [
@@ -222,29 +253,39 @@ RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
 			mediumSize: 6.
 		html
 			column: [
-				html strong: 'Evolution of publications'.
+				html strong: 'Evolution in time'.
 				yearlyEvolutionPlotSubComponent publications: publications.
 				html render: yearlyEvolutionPlotSubComponent ]
-			mediumSize: 6 ].
-	^ html row: [
-		  html
-			  column: [
-				  html strong: 'Publications by topic'.
-				  topicsTaxonomyPlotSubComponent
-					  publications: publications
-					  taxonomy: self radar topicsTaxonomy
-					  aspect: #topics.
-				  html render: topicsTaxonomyPlotSubComponent ]
-			  mediumSize: 6.
-		  html
-			  column: [
-				  html strong: 'Publications by application domain'.
-				  applicationDomainsTaxonomyPlotSubcomponent
-					  publications: publications
-					  taxonomy: self radar applicationDomainsTaxonomy
-					  aspect: #applicationDomains.
-				  html render: applicationDomainsTaxonomyPlotSubcomponent ]
-			  mediumSize: 6 ]
+			mediumSize: 6 ]
+]
+
+{ #category : #rendering }
+RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
+
+	html heading: regionName.
+	html paragraph: [
+		html strong:
+			'Total number of  publications: ' , publications size greaseString ].
+	self renderPlotsOn: html.
+	html row: [
+		html
+			column: [
+				html strong: 'Publications by topic'.
+				topicsTaxonomyPlotSubComponent
+					publications: publications
+					taxonomy: self radar topicsTaxonomy
+					aspect: #topics.
+				html render: topicsTaxonomyPlotSubComponent ]
+			mediumSize: 6.
+		html
+			column: [
+				html strong: 'Publications by application domain'.
+				applicationDomainsTaxonomyPlotSubcomponent
+					publications: publications
+					taxonomy: self radar applicationDomainsTaxonomy
+					aspect: #applicationDomains.
+				html render: applicationDomainsTaxonomyPlotSubcomponent ]
+			mediumSize: 6 ]
 ]
 
 { #category : #rendering }
@@ -277,7 +318,7 @@ RadarViewComponent >> url [
 	^ Radar radarProperties at: 'url'
 ]
 
-{ #category : #rendering }
+{ #category : #remove }
 RadarViewComponent >> urlForArea: areaName [
 
 	| path  |
