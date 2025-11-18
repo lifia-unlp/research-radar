@@ -7,6 +7,12 @@ Class {
 	#category : #'ResearchRadar-seaside-components'
 }
 
+{ #category : #'accessing-urls' }
+PrivateHomeComponent class >> baseUrl [
+
+	^ 'research-radar-admin'
+]
+
 { #category : #rendering }
 PrivateHomeComponent >> renderContentOn: html [
 
