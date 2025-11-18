@@ -16,7 +16,7 @@ Class {
 		'urlColumn',
 		'typeMappings'
 	],
-	#category : #'ResearchRadar-seaside-components'
+	#category : #'ResearchRadar-seaside-backend'
 }
 
 { #category : #accessing }

@@ -8,15 +8,16 @@ Class {
 		'topicsWithLevels',
 		'producedByNetwork',
 		'relevanceToTopic',
-		'bibtexEntry'
+		'bibtexEntry',
+		'networkNodes'
 	],
-	#category : #'ResearchRadar-seaside-components'
+	#category : #'ResearchRadar-seaside-backend'
 }
 
 { #category : #callbacks }
 PublicationEditorComponent >> accept [
 
-	bibtexEntry  title isEmpty | bibtexEntry author isEmpty
+	bibtexEntry title isEmpty | bibtexEntry author isEmpty
 	| bibtexEntry year isEmpty ifTrue: [ ^ self ].
 
 	publication ifNil: [ publication := Publication new ].
@@ -26,7 +27,7 @@ PublicationEditorComponent >> accept [
 		topics: (topicsWithLevels collect: #value);
 		applicationDomains: (applicationDomainsWithLevels collect: #value);
 		relevanceToTopic: relevanceToTopic;
-		byNetwork: producedByNetwork.
+		networkNodes: networkNodes.
 	self answer: publication
 ]
 
@@ -52,6 +53,17 @@ PublicationEditorComponent >> applicationDomainsWithLevels: anObject [
 PublicationEditorComponent >> choose: elements fromElementsWithLevelsIn: elementsWithLevels [
 
 	^ elementsWithLevels select: [ :each | elements includes: each value ]
+]
+
+{ #category : #initialize }
+PublicationEditorComponent >> choose: nodes fromGroupsIn: groups [
+
+	| groupNames |
+	groupNames := nodes
+		              ifNil: [ OrderedCollection new ]
+		              ifNotNil: [ :it | it collect: #fullName ].
+	^ self radar groups select: [ :each |
+		  groupNames includes: each fullName ]
 ]
 
 { #category : #accessing }
@@ -82,6 +94,18 @@ PublicationEditorComponent >> editBibtexEntry [
 			first.
 	result := self call: bibtexChunckImportComponent.
 	result ifNotNil: [ :it | bibtexEntry := it ]
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> networkNodes [
+
+	^ networkNodes
+]
+
+{ #category : #accessing }
+PublicationEditorComponent >> networkNodes: anObject [
+
+	networkNodes := anObject
 ]
 
 { #category : #accessing }
@@ -119,7 +143,8 @@ PublicationEditorComponent >> publication: anObject [
 		                                choose:
 		                                publication applicationDomains
 		                                fromElementsWithLevelsIn:
-		                                self applicationDomainsToChooseFrom
+		                                self applicationDomainsToChooseFrom.
+	networkNodes := self choose: publication networkNodes fromGroupsIn: self radar groups.
 ]
 
 { #category : #accessing }
@@ -200,6 +225,13 @@ PublicationEditorComponent >> renderContentOn: html [
 					size: 10;
 					list: self applicationDomainsToChooseFrom ].
 
+			html formGroup: [
+				html label: 'Network groups'.
+				html multiSelect formControl
+					on: #networkNodes of: self;
+					labels: [ :group | group fullName , ' (' , group acronym , ')' ];
+					size: 10;
+					list: self radar groups ].
 
 			html formGroup: [
 				html label: 'Relevance to the topic'.
