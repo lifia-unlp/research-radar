@@ -3,8 +3,7 @@
 debug := (OSEnvironment current at: 'DEBUG' ifAbsent: 'false') = 'true'.
 
 debug ifFalse: [
-	WAAdmin defaultServerManager adaptors
-        do: [ :each | WAAdmin defaultServerManager unregister: each ].
+	WAAdmin clearAll.
 	WAAdmin applicationDefaults
 		removeParent: WADevelopmentConfiguration instance.
 ].
@@ -44,5 +43,6 @@ apps do: [:app |
    configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.   
    
 WAAdmin defaultDispatcher defaultName: RegionViewComponent baseUrl.
+
 
 
