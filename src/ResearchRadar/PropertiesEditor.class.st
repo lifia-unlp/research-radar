@@ -9,7 +9,7 @@ Class {
 		'url',
 		'region'
 	],
-	#category : #'ResearchRadar-seaside-components'
+	#category : #'ResearchRadar-seaside-backend'
 }
 
 { #category : #callbacks }
@@ -23,6 +23,7 @@ PropertiesEditor >> accept [
 		at: 'ulr' put: url;
 		at: 'region' put: region.
 	Radar radarProperties: properties .
+	self save. 
 	self answer: nil
 ]
 

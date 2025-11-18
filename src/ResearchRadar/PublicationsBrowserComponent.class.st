@@ -5,7 +5,7 @@ Class {
 		'publicationsListSubComponent',
 		'hideDone'
 	],
-	#category : #'ResearchRadar-seaside-components'
+	#category : #'ResearchRadar-seaside-backend'
 }
 
 { #category : #callbacks }

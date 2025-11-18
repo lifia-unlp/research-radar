@@ -53,13 +53,7 @@ Publication >> bibtexEntry: anObject [
 { #category : #accessing }
 Publication >> byNetwork [
 
-	^ byNetwork
-]
-
-{ #category : #accessing }
-Publication >> byNetwork: anObject [
-
-	byNetwork := anObject
+	^ networkNodes isEmptyOrNil not
 ]
 
 { #category : #accessing }

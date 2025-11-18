@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'secret'
 	],
-	#category : #'ResearchRadar-seaside-components'
+	#category : #'ResearchRadar-seaside-backend'
 }
 
 { #category : #'accessing-urls' }
@@ -17,8 +17,9 @@ PrivateHomeComponent class >> baseUrl [
 PrivateHomeComponent >> renderContentOn: html [
 
 	html container: [
-		(secret notNil and: [(secret trimBoth = Radar knownSecret)])
+		(secret notNil and: [ secret trimBoth = Radar knownSecret ])
 			ifTrue: [
+				self renderLinkToGroupsOn: html.
 				self renderLinkToPublicationsOn: html.
 				self renderLinkToTopicsTaxonomyOn: html.
 				self renderLinkToApplicationDomainsTaxonomyOn: html.
@@ -38,6 +39,18 @@ PrivateHomeComponent >> renderLinkToApplicationDomainsTaxonomyOn: html [
 							   publicationsRetrievingBlock: [ self radar publications ];
 							   yourself) ];
 			  with: 'Application domains taxonomy' ]
+]
+
+{ #category : #rendering }
+PrivateHomeComponent >> renderLinkToGroupsOn: html [
+
+	html paragraph: [
+		html anchor
+			callback: [
+				self call: (NetworkGroupsBrowser new
+							 caller: self;
+							 yourself) ];
+			with: 'Grupos' ]
 ]
 
 { #category : #rendering }
