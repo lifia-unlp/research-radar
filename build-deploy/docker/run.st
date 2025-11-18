@@ -34,8 +34,15 @@ apps do: [:app |
 	addLibrary: SBSDeploymentLibrary .	
 ].
 
-(WAAdmin defaultDispatcher handlerAt: 'research-radar')
+(WAAdmin defaultDispatcher handlerAt: CountryViewComponent baseUrl)
    configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.
 
-WAAdmin defaultDispatcher defaultName: 'research-radar'.
+(WAAdmin defaultDispatcher handlerAt: RegionViewComponent baseUrl)
+   configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.
+
+(WAAdmin defaultDispatcher handlerAt: TopicViewComponent baseUrl)
+   configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.   
+   
+WAAdmin defaultDispatcher defaultName: RegionViewComponent baseUrl.
+
 
