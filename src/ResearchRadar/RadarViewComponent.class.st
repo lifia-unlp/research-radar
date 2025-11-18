@@ -19,6 +19,11 @@ RadarViewComponent >> allPublications [
 	^ self radar publications
 ]
 
+{ #category : #callbacks }
+RadarViewComponent >> browseByTopic: aTopic [ 
+	self show: TopicViewComponent new. 
+]
+
 { #category : #hooks }
 RadarViewComponent >> children [
 
@@ -120,11 +125,12 @@ RadarViewComponent >> renderBriefTaxonomyOn: html [
 { #category : #rendering }
 RadarViewComponent >> renderContentOn: html [
 
-	| selectedCountry selectedArea |
+	| selectedCountry selectedArea selectedTopic |
 	selectedArea := self selectedArea.
 	selectedCountry := (self publishedCountries includes: selectedArea)
 		                   ifTrue: [ selectedArea ]
 		                   ifFalse: [ nil ].
+	selectedTopic := self selectedTopic .
 	html container: [
 		self renderNavBarOn: html.
 
@@ -207,12 +213,8 @@ RadarViewComponent >> renderNavBarOn: html [
 ]
 
 { #category : #rendering }
-RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
+RadarViewComponent >> renderPlotsOn: html [
 
-	html heading: regionName .
-	html paragraph: [
-		html strong:
-			'Total number of  publications: ' , publications size greaseString ].
 	html row: [
 		html
 			column: [
@@ -222,29 +224,39 @@ RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
 			mediumSize: 6.
 		html
 			column: [
-				html strong: 'Evolution of publications'.
+				html strong: 'Evolution in time'.
 				yearlyEvolutionPlotSubComponent publications: publications.
 				html render: yearlyEvolutionPlotSubComponent ]
-			mediumSize: 6 ].
-	^ html row: [
-		  html
-			  column: [
-				  html strong: 'Publications by topic'.
-				  topicsTaxonomyPlotSubComponent
-					  publications: publications
-					  taxonomy: self radar topicsTaxonomy
-					  aspect: #topics.
-				  html render: topicsTaxonomyPlotSubComponent ]
-			  mediumSize: 6.
-		  html
-			  column: [
-				  html strong: 'Publications by application domain'.
-				  applicationDomainsTaxonomyPlotSubcomponent
-					  publications: publications
-					  taxonomy: self radar applicationDomainsTaxonomy
-					  aspect: #applicationDomains.
-				  html render: applicationDomainsTaxonomyPlotSubcomponent ]
-			  mediumSize: 6 ]
+			mediumSize: 6 ]
+]
+
+{ #category : #rendering }
+RadarViewComponent >> renderRegionOverviewFor: regionName on: html [
+
+	html heading: regionName.
+	html paragraph: [
+		html strong:
+			'Total number of  publications: ' , publications size greaseString ].
+	self renderPlotsOn: html.
+	html row: [
+		html
+			column: [
+				html strong: 'Publications by topic'.
+				topicsTaxonomyPlotSubComponent
+					publications: publications
+					taxonomy: self radar topicsTaxonomy
+					aspect: #topics.
+				html render: topicsTaxonomyPlotSubComponent ]
+			mediumSize: 6.
+		html
+			column: [
+				html strong: 'Publications by application domain'.
+				applicationDomainsTaxonomyPlotSubcomponent
+					publications: publications
+					taxonomy: self radar applicationDomainsTaxonomy
+					aspect: #applicationDomains.
+				html render: applicationDomainsTaxonomyPlotSubcomponent ]
+			mediumSize: 6 ]
 ]
 
 { #category : #rendering }
@@ -263,6 +275,20 @@ RadarViewComponent >> selectedArea [
 	segments := self requestContext request url path.
 	segments size = 2 ifTrue: [ ^ segments second ].
 	^ nil
+]
+
+{ #category : #navigating }
+RadarViewComponent >> selectedTopic [
+
+	| topicLabel taxonomy |
+	taxonomy := self radar topicsTaxonomy.
+	topicLabel := self requestContext request queryFields
+		              at: 'topic'
+		              ifAbsent: nil.
+	^ topicLabel ifNil: [ taxonomy ] ifNotNil: [
+		  taxonomy withSubtopics
+			  detect: [ :each | each label = topicLabel ]
+			  ifNone: [ taxonomy ] ]
 ]
 
 { #category : #rendering }

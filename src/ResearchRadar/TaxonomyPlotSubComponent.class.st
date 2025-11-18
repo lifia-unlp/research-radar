@@ -38,7 +38,10 @@ TaxonomyPlotSubComponent >> renderTaxonomyTopic: aTopic on: html [
 	html listItem: [
 		count = 0
 			ifTrue: [ html text: text ]
-			ifFalse: [ html strong: text ].
+			ifFalse: [
+				html anchor
+				   url: (TopicViewComponent topicRadarUrlFor: aTopic);
+					with: [ html text: text ] ].
 		aTopic subtopics ifNotEmpty: [ :subtopics |
 			html unorderedList: [
 				subtopics do: [ :subtopic |
