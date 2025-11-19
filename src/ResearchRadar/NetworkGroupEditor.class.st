@@ -99,6 +99,7 @@ NetworkGroupEditor >> group: anObject [
 	acronym := anObject acronym.
 	fullName := anObject fullName.
 	contactName := anObject contactName.
+	contactEmail := anObject contactEmail .
 	country := anObject country.
 	notes := anObject notes
 ]
