@@ -1,9 +1,11 @@
-| apps debug |
+| apps debug toUnregister |
+
+toUnregister := { 'bootstrap5'. 'browse'. 'examples'. 'seaside'. 'status'. 'tests'. 'tools'. 'welcome'. 'config' }.
 
 debug := (OSEnvironment current at: 'DEBUG' ifAbsent: 'false') = 'true'.
 
 debug ifFalse: [
-	WAAdmin clearAll.
+	toUnregister do: [ :each | WAAdmin unregister: each ].
 	WAAdmin applicationDefaults
 		removeParent: WADevelopmentConfiguration instance.
 ].
@@ -43,6 +45,7 @@ apps do: [:app |
    configuration at: #trackingStrategy put: WACookieIfSupportedSessionTrackingStrategy new.   
    
 WAAdmin defaultDispatcher defaultName: RegionViewComponent baseUrl.
+
 
 
 
