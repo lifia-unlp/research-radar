@@ -96,6 +96,12 @@ PublicationEditorComponent >> editBibtexEntry [
 	result ifNotNil: [ :it | bibtexEntry := it ]
 ]
 
+{ #category : #rendering }
+PublicationEditorComponent >> grandTopic [
+
+	^ self radar topicsTaxonomy label
+]
+
 { #category : #accessing }
 PublicationEditorComponent >> networkNodes [
 
@@ -188,17 +194,20 @@ PublicationEditorComponent >> renderBibtexEntryOn: html [
 { #category : #rendering }
 PublicationEditorComponent >> renderContentOn: html [
 
+	| groupDisplayBlock |
+	groupDisplayBlock := [ :group |
+	                     group country , ' - ' , group fullName , ' ('
+	                     , group acronym , ')' ].
+
 	html container: [
 		self renderBibtexEntryOn: html.
 		html form: [
-			html formGroup
-				formCheck;
-				with: [
-					html formCheckLabel with: [
-							html formCheckbox
-								on: #producedByNetwork of: self;
-								with: 'Any author belongs to the network?' ] ].
-
+			html formGroup: [
+				html label: 'Relevance to ' , self grandTopic.
+				html formSelect
+					on: #relevanceToTopic of: self;
+					list: self valuesForRelevanceToQse ].
+			html break.
 
 			html formGroup: [
 				html label: 'Iberoamerican countries'.
@@ -206,6 +215,16 @@ PublicationEditorComponent >> renderContentOn: html [
 					on: #countries of: self;
 					size: 10;
 					list: self countriesToChooseFrom ].
+			html break.
+			html formGroup: [
+				html label: 'Network groups'.
+				html multiSelect formControl
+					on: #networkNodes of: self;
+					labels: groupDisplayBlock;
+					size: 10;
+					list: (self radar groups asSortedCollection: [ :a :b |
+								 (groupDisplayBlock value: a) <= (groupDisplayBlock value: b) ]) ].
+			html break.
 
 			html formGroup: [
 				html label: 'Topics'.
@@ -215,7 +234,7 @@ PublicationEditorComponent >> renderContentOn: html [
 						(String new: each key * 4 withAll: $.) , each value label ];
 					size: 10;
 					list: self topicsToChooseFrom ].
-
+			html break.
 			html formGroup: [
 				html label: 'Application domains'.
 				html multiSelect formControl
@@ -224,20 +243,6 @@ PublicationEditorComponent >> renderContentOn: html [
 						(String new: each key * 4 withAll: $.) , each value label ];
 					size: 10;
 					list: self applicationDomainsToChooseFrom ].
-
-			html formGroup: [
-				html label: 'Network groups'.
-				html multiSelect formControl
-					on: #networkNodes of: self;
-					labels: [ :group | group fullName , ' (' , group acronym , ')' ];
-					size: 10;
-					list: self radar groups ].
-
-			html formGroup: [
-				html label: 'Relevance to the topic'.
-				html formSelect
-					on: #relevanceToTopic of: self;
-					list: self valuesForRelevanceToQse ].
 			html break.
 			html formGroup: [
 				html formButton

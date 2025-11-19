@@ -57,22 +57,14 @@ PublicationsListSubComponent >> publications: aListOfPublications [
 PublicationsListSubComponent >> renderActionsFor: each on: html [
 
 	editingEnabled ifFalse: [ ^ self ].
-	html row: [
-		html
-			column: [
-				html anchor
-					callback: [ self edit: each ];
-					with: '[editar]' ]
-			mediumSize: 6.
-		html break.
-
-
-		html
-			column: [
-				html anchor
-					callback: [ self delete: each ];
-					with: '[X]' ]
-			mediumSize: 6 ]
+	html break.
+	html anchor
+		callback: [ self edit: each ];
+		with: '[edit]'.
+	html space.
+	html anchor
+		callback: [ self delete: each ];
+		with: '[delete]'
 ]
 
 { #category : #rendering }
@@ -106,6 +98,10 @@ PublicationsListSubComponent >> renderPublication: each on: html [
 	html strong: 'Countries (from iberoamerica): '.
 	html text: each countries asCommaStringAnd.
 	html break.
+	html strong: 'Groups: '.
+	html text: (each networkNodes collect: [ :group |
+			 group acronym , ' (' , group country , ')' ]) asCommaStringAnd.
+	html break.
 	html strong: 'Topics: '.
 	html text:
 		(each topics collect: [ :dom | dom value label ]) asCommaStringAnd.
@@ -116,6 +112,7 @@ PublicationsListSubComponent >> renderPublication: each on: html [
 			asCommaStringAnd.
 	showAbstracts ifTrue: [
 		html break.
+		html strong: 'Abstract: '.
 		html text: each abstract ].
 	self renderActionsFor: each on: html
 ]

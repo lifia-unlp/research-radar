@@ -125,6 +125,12 @@ TaxonomyBrowserComponent >> publicationsRetrievingBlock: anObject [
 TaxonomyBrowserComponent >> renderContentOn: html [
 
 	html container: [
+			html anchor
+			callback: [ self answer ];
+			with: [ html formButton bePrimary with: 'Back' ].
+		html
+			break;
+			break.
 		html row: [
 			html
 				column: [

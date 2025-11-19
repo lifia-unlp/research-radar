@@ -37,6 +37,18 @@ NetworkGroupsBrowser >> edit: aGroup [
 NetworkGroupsBrowser >> renderContentOn: html [
 
 	html container: [
+		html anchor
+			callback: [ self answer ];
+			with: [ html formButton bePrimary with: 'Back' ].
+		html
+			break;
+			break.
+		html anchor
+			callback: [ self addGroup ];
+			with: [ html formButton bePrimary with: 'Add' ].
+		html
+			break;
+			break.
 		self radar groups do: [ :each |
 			html paragraph: [
 				html text: each fullName.
@@ -50,10 +62,5 @@ NetworkGroupsBrowser >> renderContentOn: html [
 				html space.
 				html anchor
 					callback: [ self delete: each ];
-					with: '[Delete]' ] ].
-
-		html break.
-		html anchor
-			callback: [ self addGroup ];
-			with: [ html formButton bePrimary with: 'Add' ] ]
+					with: '[Delete]' ] ] ]
 ]

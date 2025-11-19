@@ -59,6 +59,12 @@ PublicationsBrowserComponent >> publicationsToShow [
 PublicationsBrowserComponent >> renderContentOn: html [
 
 	html container: [
+		html anchor
+			callback: [ self answer ];
+			with: [ html formButton bePrimary with: 'Back' ].
+		html
+			break;
+			break.
 		self renderOptionsBarOn: html.
 		publicationsListSubComponent publications: self publicationsToShow.
 		html render: publicationsListSubComponent ]
